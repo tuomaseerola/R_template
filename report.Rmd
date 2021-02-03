@@ -39,6 +39,7 @@ This repository and the documents are not a quick _R tutorial_ nor _statistics t
 2. To collaborate more easily and effectively. This also helps to spot mistakes and encourage learning and trying out new things (Sandve et al., 2013).
 3. To communicate your research more effectively by writing clear analysis paths that are able to produce the key statistics, figures and tables effortlessly. This also helps to gain visibility to research if shared fully (see Piwowar et al., 2007).
 
+The best guide for all things reproducible is provided by [Reproducibility in Science](https://ropensci.github.io/reproducibility-guide/sections/introduction/).
 
 # Why _R_?
 
