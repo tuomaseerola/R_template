@@ -1,6 +1,8 @@
 # Readme: R_Template
 
-These files contains R template for analysing data from experiments and surveys and justification to follow certain conventions and structure. This document is available at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template). This can also be started as an independent process at binder, [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tuomaseerola/R_template/main?urlpath=rstudio).
+These files contains R template for analysing data from experiments and surveys and justification to follow certain conventions and structure. This document is available at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template) and as a rendered html at [https://tuomaseerola.github.io/R_template/](https://tuomaseerola.github.io/R_template/). 
+
+The analysis can also be started as an independent R process at Binder, [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tuomaseerola/R_template/main?urlpath=rstudio).
 
 `contents.R` will be needed to reproduce the analysis. It is an example of how the different structures and processes in the analysis can be executed (loading, transforming, screening the data, visualising, applying statistical analyses).
 
