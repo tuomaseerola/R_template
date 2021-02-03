@@ -2,7 +2,7 @@
 # Part of R_template by Tuomas Eerola, https://github.com/tuomaseerola/R_template/
 
 ##install required libraries
-required_lib=c("ggplot2", "psych","dplyr", "reshape2", "stringr")
+required_lib=c("ggplot2", "psych","dplyr", "reshape2", "stringr","tidyr","stringr","lme4","lmerTest","emmeans")
 
 install_required_libs<-function(){
   for(i in 1: length(required_lib)){

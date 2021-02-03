@@ -1,4 +1,9 @@
-install.packages("readr")
 install.packages("ggplot2")
 install.packages("tidyr")
-
+install.packages("psych")
+install.packages("dplyr")
+install.packages("reshape2")
+install.packages("stringr")
+install.packages("lme4")
+install.packages("lmerTest")
+install.packages("emmeans")
