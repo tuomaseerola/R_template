@@ -25,6 +25,7 @@ source('scr/visualise.R')                 # Visualises few aspects of the data
 
 #### ANALYSE data ---------------------------------------------------------------------------
 source('scr/compare_means.R')             # Compares Sources and Tracks across Emotion Scales
-source('scr/table.R')                     # Does one example table (means and variance of sadness)
+source('scr/table1.R')                     # Does one example table (means and variance of sadness)
 source('scr/figure1.R')                   # Creates Figure 1 for manuscript
 
+print("All scripts completed")
