@@ -1,5 +1,10 @@
 ---
 title: "R_template - A Template for Reproducible Analysis of Behavioural Data"
+knit: (function(input_file, encoding) {
+  out_dir <- 'reports';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author: "Tuomas Eerola, Durham University"
 date: "1/2/2021"
 header-includes:
