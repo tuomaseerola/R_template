@@ -27,11 +27,9 @@ urlcolor: blue
 
 **Release notes**
 
-_Created: 1/2/2021_.
+These files contains R template for analysing data from experiments and surveys and justification to follow certain conventions and structure. This document is available in raw form at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template) and as a rendered html at [https://tuomaseerola.github.io/R_template/](https://tuomaseerola.github.io/R_template/). 
 
-These files contains R template for analysing data from experiments and surveys and justification to follow certain conventions and structure. This document is available at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template). 
-
-This can also be started as an independent process at Binder, [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tuomaseerola/R_template/main?urlpath=rstudio.
+The analysis process can also be started as an independent process at Binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tuomaseerola/R_template/main?urlpath=rstudio.
 
 This repository and the documents are not a quick _R tutorial_ nor _statistics tutorial_ but simply a way to explain to PG students and collaborators of how clear analyses schemes can be created, followed, and shared.
 
