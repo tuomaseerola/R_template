@@ -1,0 +1,223 @@
+---
+title: "R_template - A Template for Reproducible Analysis of Behavioural Data"
+author: "Tuomas Eerola, Durham University"
+date: "1/2/2021"
+header-includes:
+   - \usepackage{svg}
+output:
+  html_document:
+    highlight: tango
+    number_sections: yes
+    toc: yes
+    theme: yeti
+  pdf_document:
+    highlight: tango
+    keep_tex: no
+    number_sections: yes
+    toc: yes
+geometry: margin=1in
+fontsize: 12pt
+urlcolor: blue
+---
+
+**Release notes**
+
+_Created: 1/2/2021_.
+
+These files contains R template for analysing data from experiments and surveys and justification to follow certain conventions and structure. This document is available at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template). 
+
+This can also be started as an independent process at Binder, [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tuomaseerola/R_template/main?urlpath=rstudio.
+
+This repository and the documents are not a quick _R tutorial_ nor _statistics tutorial_ but simply a way to explain to PG students and collaborators of how clear analyses schemes can be created, followed, and shared.
+
+# Why reproducible research? 
+
+1. To comply with the increased demands for transparency and open access data, originally formulated within the computer sciences but later spread to biosciences and currently taking hold in social sciences (see Asendorpf et al., 2013; Tomasello & Call, 2011). We should aim to do all our statistical analyses transparently and in a reproducible fashion.
+2. To collaborate more easily and effectively. This also helps to spot mistakes and encourage learning and trying out new things (Sandve et al., 2013).
+3. To communicate your research more effectively by writing clear analysis paths that are able to produce the key statistics, figures and tables effortlessly. This also helps to gain visibility to research if shared fully (see Piwowar et al., 2007).
+
+
+# Why _R_?
+
+Here I have chosen _R_ (and _RStudio_ as the smooth and handy front-end) to be the chosen tool for reproducible analyses, although of course any statistical software could also be used. However, there are several good arguments to support _R_ as a good choice. And I have long personal experience of SPSS and Matlab, both powerful but hampered by various design issues, but R has several advantages over these: 
+
+1. _R_ is the most accessible software. _R_ is free, open source, available for all operating systems. Matlab is great for certain type of work, but expensive, fussy about the operating systems, not to mention _SPSS_ in these issues. Often the problem is not the price, universities can afford to have the licenses, but the skills learned through the software need to be used often in a different environment that might not have the same resources (arts organisation, startup company, etc.).
+
+2. _R_ is completely programming driven (thus fully transparent). _Matlab_ is equaly so, but since it is essentially a _MATrix LABoratory_, it is very good for numerical analyses, but _R_ is a little more versatile for strings and data structures more commonly used in statistics. SPSS also has the syntax option, but it is much more cryptic and unwieldy than _R_ and _Matlab_. Clear syntax driven operation makes the analyses easily human readable, which is important for collaborations.
+
+3. _R_ has excellent coverage of statistical modelling tools. Thousands of R packages exist for any state-of-the-art statistical technique (bayesian, structural equation modelling, rare regression analytics, all machine-learning algorithms with effective implementations, and many more).
+
+4. _R_ is rational and even pedagogical in many of its functionalities (it warns about calculating means for categorical variables, is much more explicit about the outputs, and data.frames, etc.) and allows to produce really easily understandable code with some extra libraries (`tidyr`, `ggplot2`,`psych`). 
+
+5. _R_ has excellent support for producing reports in [R Markdown](http://rmarkdown.rstudio.com/) or even for creating interactive websites using [Shiny](http://shiny.rstudio.com).
+
+# Analysis Template
+
+I have prepared an analysis template, which contains examples of the whole process of data analysis; from loading to preprocessing data and analysing and reporting the results. I suggest a certain folder structure to keep the different parts of the processes tightly in different folders. I have been influenced by existing templates[^fn-ProjectTemplate] and style guides[^fn-acknowledgments], but it is basically the cleaned up version of the structures that I have for each project.
+
+[^fn-ProjectTemplate]: [ProjectTemplate](http://projecttemplate.net)
+[^fn-acknowledgments]: [Style Guide](http://adv-r.had.co.nz/Style.html)
+
+## Suggested folder structure
+
+A project should have a dedicated folder with a descriptive name it. Within the folder, there is a master file called the `contents.R` which contains a brief summary of the project, owner, status, and the necessary commands to load the data, pre-process it, analyse, and produce figures and tables. For clarity, it is good idea to keep things organised in particular special subfolders. 
+
+**`/data`**
+: Stores the original data, preferably in read-only format. Can be Excel or ascii files, or folders of separate files exported from experiment data collection interface or from _Qualtrics_ or _PsyToolkit_. Be wary of different encodings (UTF-8, Western, UTF-16, etc.) which is the usual cause of problems when reading in data. I would stress that we do not carry out any edits on the data, even if you find out that there are typos or mistakes in the data. Handling these in the next step makes the process replicable and transparent and documents what issues were fixed and how. If there are several versions of the data (original survey, and a small top-up), it is useful to use the date of the data retrieval or the N as a part of an informative filename (`Emotion_Identification_N119_noheader.tsv`).
+
+**`/munge`**
+: Munge folder refers to "data munging", which means cleaning and transforming the data to a suitable format for the analysis. If you have to recode (e.g., invert the scale for a question that has been asked with a reverse wording in comparison to other items, or relabel cryptic variable names from surveys) or combine items into indices of instruments, this is the place to do it. Sometimes filtering participants out that do not fit the criteria (missed too many questions, trials, or did not consent to the study etc.) can be done at this stage.
+
+**`/scr`**
+: R Scripts used in the analysis. This is the main folder that keeps all the interesting elements of the  analysis. Examples of diagnostics, statistical testing, plotting, and generating tables are given.
+
+**`/figures`**
+: All figures and graphs produced by analysis scripts (preferably in pdf format) can be stored here. The example scripts always write the graphics in this folder.
+
+**`/reports`**
+: This is often option, but if you create manual or automated reports summarising the analysis, this is the place to store them. The latter can be done with [R markdown](http://rmarkdown.rstudio.com).
+
+## Using the Template
+
+Once you have the template including the data and folder structure as well as _R_ installed (or _RStudio_), it should be straightforward to proceed to using the template. A copy of the template can be found at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template).
+
+### Example data
+
+The following example loads one dataset from Annaliese Micallef-Grimaud's study about perceived emotions in music. This was a experiment where 119 participants rated a small number of music examples using different emotion scales (Anger, Calmness, Fear, Joy, Power, Sadness, and Surprise). The ratings were done using likert scale of 1 to 5 (1=minimal and 5=maximal) and the music excerpts were composed to portray different emotions (angry, calm, scary, joyful, power, sad, surprising). The data was collected via Qualtrics and there is quite a lot of tidying up to do before this data can be analysed. The typical research questions would revolve around whether the tracks representing different emotions are differently in terms of the emotions and there are variants of the pieces from the past experiments that have either been created by the Annaliese (Exp. 1) or modified by participants in production study (Exp. 2), so another question is whether the two sources for the same piece differ in terms of their ratings. This is a validation part of the study that we have submitted to a journal together with some other data from production experiments (where people adjust the musical cues to produce different emotional expressions of the same pieces). We hope to get an actual reference for this data in near future.
+
+You can grab the whole template (folder structures, R scripts, and Report.Rmd notebook and the data) from [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template).
+
+### Initialise the analysis
+
+Start R and open up the `contents.R` file using your preferred editor. Check that the directory after the first command `setwd` is pointing the location of your analysis directory and run the first lines of the code:
+
+```{r results='hide', message=FALSE, warning=FALSE}
+## INITIALISE: SET PATH, CLEAR MEMORY AND LOAD LIBRARIES
+rm(list=ls(all=TRUE))                 # Cleans the R memory, just in case
+source('scr/load_libraries.R')        # Loads the necessary R libraries
+```
+
+If you get errors at this stage with new installation of R, they might refer to the special libraries that were loaded or installed in `libraries.R`. This script should install the required libraries for you such as `ggplot2`, but there might be issues with your particular setup.
+
+### Load, preprocess and diagnose the data
+
+Next, it is time to load the data with a scripts, the first one `read_data_survey.R` is simply reading an TSV file exported from Qualtrics stored in data folder. I've taken the second, descriptive header row out of the data to simply the process, but different datasets will have slightly different structures.
+
+```{r warning=FALSE}
+## READ data
+source('scr/read_data_survey.R')      # Produces data frame v 
+```
+
+This should retrieve a data frame into a variable called `v` in _R_, which contains a complex data frame. In the next step this raw data will be munged, that is, pre-processed in several ways. Pre-processing can have multiple steps, here these have broken into two:
+
+1. First operation carries out a long list of renaming the variables (columns in the data, `rename_variables.R`). This can be avoided if the data has these names already, and it is quite useful to try to embed meaningful variables names to the data collection (experiment or survey or manual coding). 
+
+2. Recoding instruments (`recode_instruments.R`) has several steps and it might be useful to study the steps separately. Finally the responses are reshaped into a form called long-form that is better suited for the analyses. This dataframe will be called `df`.
+
+```{r results='hide', message=FALSE, warning=FALSE}
+## MUNGE data (preprocess, recode, etc.)
+source('munge/rename_variables.R')        # Renames the columns of the v
+source('munge/recode_instruments.R')      # Produces df (long-form) from v
+```
+
+After the munging, it is prudent to check various aspects of the data.
+
+1. Descriptives such as the N, age, gender are echoed in order to remind us of the dataset properties (`demographics_info.R`). 
+
+2. We can also explore the consistency of the ratings across the people to check whether people agreed on the ratings and generally understood the task (`interrater_reliability.R`). 
+
+3. We also want to look at the distributions of the collected data in order to learn whether one needs to use certain operations (transformations or resort to non-parametric statistics) in the subsequent analyses (`visualise.R`). This step will also include displaying correlations between the emotion scales which is a useful operation to learn about the overlap of the concepts used in the tasks. 
+
+
+```{r warning=FALSE, fig.height=8}
+## DIAGNOSE and VISUALISE data
+source('scr/demographics_info.R')     # Reports N, Age and other details
+source('scr/interrater_reliability.R')# Quality checks, consistency check
+source('scr/visualise.R')             # Visualise few aspects of the data
+```
+
+If everything seems to be fine, it is time to proceed into the actual analysis.
+
+### Analyse the data
+
+Finally we get to test the planned hypotheses of the experiment. Here we simply test whether the emotion ratings different between the sources and emotions. We do this by applying a Linear Mixed Model, which is a fancy name for a versatile within-subject anova in this case, where we have one random factor (participants) and we test the manipulated factors (Source, Track) and perhaps some non-manipulated group-level descriptors (e.g., Gender and Musical Expertise) have an effect on ratings of specific emotions expressed by the tracks.
+
+```{r,results='asis',warning=FALSE,message=FALSE}
+source('scr/compare_means.R')   # Compare Sources & Tracks for one emotion
+```
+
+Table 1 is a raw summary of the LMM analysis, suggesting that there is one main effect (Track) whereas the other factor do not really contribute to the differences. Only one interaction was tested (Track and Source) You would normally report this in text, but that's a different topic (statistics and reporting). Table 2 is related to Table 1 as it shows the confidence intervals of the beta coefficients (model estimates).
+
+\pagebreak
+
+One can also produce tables in the same way using a simple script. Here's an example of the sadness ratings across the key variables, showing the N, mean, SD, SE (Standard errors), and lower (LCI) and upper boundaries (UCI) of the 95% confidence intervals.
+
+```{r,results='asis'}
+source('scr/table1.R')            # create Table 1 for manuscript
+```
+```{r,fig.cap='Ratings of Sadness across tracks and sources.',fig.height=7,fig.width=5}
+source('scr/figure1.R')            # create Figure 1 for manuscript
+```
+
+* * *
+Happy exploring. The intention is carrying out the analysis this way is to get a clear sense of the process and deliver outputs of the analyses that are easy to bring to the manuscript, and which also should be transparent for the other readers (supervisors and collaborators, and other readers now that analysis routines can be routinely shared in _Github_ and _OSF_, see [https://osf.io](https://osf.io)).
+
+### Combine report and analysis (optional)
+
+It is also possible to combine the reporting of the analysis and the actual analysis to make the process even more transparent. An example of this can be found in `report.Rmd`, which basically runs the steps in the example tempate in sequence within a particular syntax (R md, using `knitr`, and this also creates a pdf or htlm report to the same folder (take a loot at the `report.pdf`), which can contain all sorts of written arguments, comments and so on. 
+
+It is actually possible to write the whole manuscript in _RStudio_ using _RMarkdown_, which handles citations nicely with a build-in citation manager, and has an excellent APA compatible reporting tool (`papaja` library) that allows to weave every detail from the data, analysis, statistics to manuscript. Anyway, that's for an advanced tutorial.
+
+\pagebreak
+
+# Help for statistics with R
+
+## Online tutorials
+
+[An Introduction to R](http://cran.r-project.org/doc/manuals/r-release/R-intro.html)
+: The official guifance from _The Comprehensive R Archive Network (CRAN)_. May not be always the most compelling introduction but exhaustive at least.
+
+[Quick-R](http://www.statmethods.net)
+: Really good source of R examples for almost all operations (manipulation, representation, functions, syntax, stats, figures, etc.).
+
+[R tutorials](http://www.cyclismo.org/tutorial/R/)
+: Another fairly clear collection of tutorials.
+
+[RStudio online learning pages](https://education.rstudio.com)
+: [R Studio](http://www.rstudio.com) is fancy and great visual GUI on top of the R for all platforms and they have released very useful documentations, tutorials, demos, etc.
+
+[Advanced R](http://adv-r.had.co.nz)
+: Author of the best packages, Hadley Wickham, has created this resource (nook and online version).
+
+### Statistics Handbooks with complete R scripts (online)
+
+[Practical Regression and Anova using R](http://cran.r-project.org/doc/contrib/Faraway-PRA.pdf)
+:  A handbook of the basic statistical operations written by Julian Faraway.
+
+[Data Analysis and Graphics Using R - An Example-Based Approach](http://maths-people.anu.edu.au/~johnm/r-book/daagur3.html)
+: Handbook in 3rd printing, written by John Maindonald and John Braun. This source contains exercises, slides, the scripts for all graphs of the book, etc. 
+
+## Other Online Resources
+
+[R blogger](http://www.r-bloggers.com)
+: Multipurpose source for news and latest issues in R.
+
+[Collection of Resources at CRAN](http://cran.r-project.org/other-docs.html)
+: Large collection of different resources (e.g. R for Matlab-minded, Fitting Distributions with R, Reference Cards, Data-mining with R, and so on).
+
+[R Documentation](http://www.rdocumentation.org)
+: Searchable online documentation
+
+[StackOverflow](http://stackoverflow.com/questions/tagged/r)
+: Forum of questions and answers about computer programming, including R.  Contains over 40,000 questions related to R.
+
+# References
+
+* Asendorpf, J. B., Conner, M., De Fruyt, F., De Houwer, J., Denissen, J. J., Fiedler, K., Fiedler, S., Funder, D. C., Kliegl, R., Nosek, B. A., & others (2013). Recommendations for increasing replicability in psychology. _European Journal of Personality, 27(2)_, 108--119. 
+* Piwowar, H. A., Day, R. S., & Fridsma, D. B. (2007). Sharing detailed research data is associated with increased citation rate. _PloS One, 2(3)_, e308. 
+* Sandve, G. K., Nekrutenko, A., Taylor, J., & Hovig, E. (2013). Ten simple rules for reproducible computational research. _PLoS computational biology, 9(10)_, e1003285. 
+* Tomasello, M. & Call, J. (2011). Methodological challenges in the study of primate cognition. _Science, 334(6060)_, 1227--1228. 
+
+
+This document is available in GitHub: [https://github.com/tuomaseerola/template_R](https://github.com/tuomaseerola/template_R)
+
