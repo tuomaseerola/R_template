@@ -78,7 +78,7 @@ g5 <- corPlot(only_scales,show.legend = FALSE,upper = FALSE,diag = FALSE,scale =
 
 ggsave(filename = 'figures/histograms_by_scale_and_track.pdf', plot = g1, device = 'pdf', height = 7, width = 7)
 ggsave(filename = 'figures/violin_by_scale_and_track.pdf',plot = g2,device = 'pdf',height = 7,width = 8)
-ggsave(filename = 'figures/means_across_emotions_tracks_and_sources.tiff',device='tiff', plot = g3, width = 9, height = 9,dpi = 300,units = 'in',compression = "lzw",type = "cairo")
+ggsave(filename = 'figures/means_across_emotions_tracks_and_sources.pdf',device='pdf', plot = g3, width = 9, height = 9)
 ggsave(filename = 'figures/means_across_musical_expertise.pdf',device='pdf', plot = g4, width = 7, height = 7)
 
 rm(g1,g2,g3,g4,g5,k,only_scales,pd,plsize,S1,theme_fs,tmp,U,custom_theme_size)
