@@ -20,12 +20,12 @@ source('munge/recode_instruments.R')      # Produces df from v that contains all
 
 #### DIAGNOSE data ---------------------------------------------------------------------------
 source('scr/demographics_info.R')         # Reports the N and Age and musical expertise
-source('scr/interrater_reliability.R')    # Run quality checks, response speed, reliability
-source('scr/visualise.R')                 # Visualises few aspects of the data
+source('scr/interrater_reliability.R')    # Runs quality checks, response speed, reliability
+source('scr/visualise.R')                 # Visualizes few aspects of the data
 
 #### ANALYSE data ---------------------------------------------------------------------------
 source('scr/compare_means.R')             # Compares Sources and Tracks across Emotion Scales
-source('scr/table1.R')                     # Does one example table (means and variance of sadness)
+source('scr/table1.R')                    # Creates an example table (means and variance of sadness)
 source('scr/figure1.R')                   # Creates Figure 1 for manuscript
 
 print("All scripts completed")
