@@ -20,9 +20,11 @@ In this repository, `contents.R` will be needed to reproduce the analysis in R. 
 
 `runtime.txt` and `install.R` are auxiliary files for Binder and not actually needed in the analysis. 
 
+You can check the slides at [https://tuomaseerola.github.io/R_template/report_presentation.html](https://tuomaseerola.github.io/R_template/report_presentation.html)
+
 ## Caveat
 
-This repository and the documents cannot be considered as a quick _R tutorial_ or a _statistics tutorial_ but simply a way to explain to PG students and collaborators of how clear analyses schemes can be created, followed, and shared. This has helped us to be productive, minimise errors and speak the same language, even though sharing is usually done internally (Dropbox or OneDrive) and only rarely through Github or OSF. For further tutorials, please seek more information about [reproducibility in science](https://ropensci.github.io/reproducibility-guide/sections/introduction/) and [RStudio online learning pages](https://education.rstudio.com).
+This repository and the documents cannot be considered as a quick _R tutorial_ or a _statistics tutorial_ but simply a way to explain to PG students and collaborators of how clear analyses schemes can be created, followed, and shared. This has helped us to be productive, minimise errors and speak the same language, even though sharing is usually done internally (Dropbox or OneDrive) and only rarely through Github or OSF. For further tutorials, please seek more information about [reproducibility in science](https://ropensci.org/) and [RStudio online learning pages](https://education.rstudio.com).
 
 Tuomas Eerola, Durham University, UK
 

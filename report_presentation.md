@@ -50,6 +50,7 @@ Assumes that you have
 
 **Blue slides** refer to questions to you 
 
+These slides are available at: [https://tuomaseerola.github.io/R_template/report_presentation.html](https://tuomaseerola.github.io/R_template/report_presentation.html)
 
 
 Initialise the analysis
@@ -476,51 +477,7 @@ Finally we have a clean final data frame on long format.
 
 ```
 processing file: report_presentation.Rpres
-
-Attaching package: 'psych'
-
-The following objects are masked from 'package:ggplot2':
-
-    %+%, alpha
-
-
-Attaching package: 'dplyr'
-
-The following objects are masked from 'package:stats':
-
-    filter, lag
-
-The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union
-
-
-Attaching package: 'tidyr'
-
-The following object is masked from 'package:reshape2':
-
-    smiths
-
-Loading required package: Matrix
-
-Attaching package: 'Matrix'
-
-The following objects are masked from 'package:tidyr':
-
-    expand, pack, unpack
-
-
-Attaching package: 'lmerTest'
-
-The following object is masked from 'package:lme4':
-
-    lmer
-
-The following object is masked from 'package:stats':
-
-    step
-
-Quitting from lines 295-297 (report_presentation.Rpres) 
+Quitting from lines 296-298 (report_presentation.Rpres) 
 Error: Can't subset columns that don't exist.
 x Column `variable` doesn't exist.
 Backtrace:
