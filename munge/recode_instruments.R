@@ -33,14 +33,13 @@ print(paste('Trimmed data: N=',nrow(v)))
 
 #### 5. Pull out emotions and tracks from the data (convert to long-form) ---------------------------------
 # Collapse across all 14 tracks
-df<-melt(v,id.vars = c("PID","Age","Gender","Country","MusicalExpertise", "Time", "Finished", "PreferredGenre", "InstrumentPlayer", "Instrument", "MusicalTraining", "MusicalExpertiseBinary"))
-df$Track<-df$variable
+df <- pivot_longer(v,cols = 11:108)
+df$Track<-df$name
 df$Track <- gsub("[A-Z][A-Z]_", "", df$Track) #function to substitute every "_POWER" with "" in df$variable
 df$Track <- gsub("_[A-Z]+$", "", df$Track) #function to substitute every "_POWER" with "" in df$variable
 
-df$Source <- gsub("_[0-9][0-9]_[A-Z]+$", "", df$variable) # take out source (OG and PTs ie own vs participant generated)
-table(df$Track,df$Source)
-df$Scale <- gsub("[A-Z][A-Z]_[0-9][0-9]_", "", df$variable) # take out scale
+df$Source <- gsub("_[0-9][0-9]_[A-Z]+$", "", df$name) # take out source (OG and PTs ie own vs participant generated)
+df$Scale <- gsub("[A-Z][A-Z]_[0-9][0-9]_", "", df$name) # take out scale
 
 df$Track<-factor(df$Track,levels = c('01','02','03','04','05','06','07'),labels = c('Sadness','Joy','Calmness','Anger','Fear','Power','Surprise'))
 df$Source<-factor(df$Source,levels = c('OG','PT'),labels = c('Exp1','Exp2'))
@@ -51,7 +50,7 @@ df$Scale<-factor(df$Scale)
 df$PreferredGenre<-factor(df$PreferredGenre)
 
 #### 6. Drop unnecessary variables ----------------------------------------
-df <- dplyr::select(df,-Country,-Finished,-InstrumentPlayer,-Instrument,-MusicalTraining,-variable,-MusicalExpertise,-PreferredGenre)
+df <- dplyr::select(df,-Country,-Finished,-InstrumentPlayer,-Instrument,-MusicalTraining,-name,-MusicalExpertise,-PreferredGenre)
 
 #### 7. Clean up memory ----------------------------------------
 rm(good_ones,ind,NAS,threshold)

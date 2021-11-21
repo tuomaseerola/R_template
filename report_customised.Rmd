@@ -6,7 +6,7 @@ knit: (function(input_file, encoding) {
  encoding=encoding,
  output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author: "Tuomas Eerola, Durham University"
-date: "22/11/2021"
+date: "1/2/2021"
 header-includes:
    - \usepackage{svg}
 output:
@@ -111,8 +111,47 @@ Next, it is time to load the data with a scripts, the first one `read_data_surve
 ## READ data
 source('scr/read_data_survey.R')      # Produces data frame v 
 ```
+### TASK: Are we clear what read_data_survey.R is doing?
 
-This should retrieve a data frame into a variable called `v` in _R_, which contains a complex data frame. In the next step this raw data will be munged, that is, pre-processed in several ways. Pre-processing can have multiple steps, here these have broken into two:
+This is the only line that matters:
+
+`v <- read.csv('data/Emotion_Identification_N119_noheader.tsv', header=TRUE, sep = "\t")`
+
+* folder and filename
+* header
+* separator
+
+And if you have the data in an Excel file, you can either convert these into CSV or TSV or utilise `readxl` library and then run `v <- read_excel('my_data.xlsx')`.
+
+This should retrieve a data frame into a variable called `v` in _R_, which contains a complex data frame.
+
+## TASK: What is the structure of the data at this point?
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+And how can we easily check the structure, learn about the structures?
+
+* What variables we have? 
+* Variables in columns and their structures?
+* What about the column names?
+
+</div>
+
+Useful commands: `head`, `str`, `is.na`, `View`.
+</p>
+
+```{r warning=FALSE}
+dim(v)
+#head(v)
+#str(v)
+#sum(is.na(v))
+#View(v)
+```
+
+In the next step this raw data will be munged, that is, pre-processed in several ways. Pre-processing can have multiple steps, here these have broken into two:
 
 1. First operation carries out a long list of renaming the variables (columns in the data, `rename_variables.R`). This can be avoided if the data has these names already, and it is quite useful to try to embed meaningful variables names to the data collection (experiment or survey or manual coding). 
 
