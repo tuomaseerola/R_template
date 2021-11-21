@@ -463,65 +463,172 @@ class: small-code
 
 Finally we have a clean final data frame on long format.
 
-
-
-
-
-
-
-
-
-
-
-
+```r
+df <- dplyr::select(df,-Country,-Finished,-InstrumentPlayer,-Instrument,-MusicalTraining,-name,-MusicalExpertise,-PreferredGenre)
+head(df)
+```
 
 ```
-processing file: report_presentation.Rpres
-Quitting from lines 296-298 (report_presentation.Rpres) 
-Error: Can't subset columns that don't exist.
-x Column `variable` doesn't exist.
-Backtrace:
-     █
-  1. ├─knitr::knit(...)
-  2. │ └─knitr:::process_file(text, output)
-  3. │   ├─base::withCallingHandlers(...)
-  4. │   ├─knitr:::process_group(group)
-  5. │   └─knitr:::process_group.block(group)
-  6. │     └─knitr:::call_block(x)
-  7. │       └─knitr:::block_exec(params)
-  8. │         └─knitr:::eng_r(options)
-  9. │           ├─knitr:::in_dir(...)
- 10. │           └─knitr:::evaluate(...)
- 11. │             └─evaluate::evaluate(...)
- 12. │               └─evaluate:::evaluate_call(...)
- 13. │                 ├─evaluate:::timing_fn(...)
- 14. │                 ├─base:::handle(...)
- 15. │                 ├─base::withCallingHandlers(...)
- 16. │                 ├─base::withVisible(eval(expr, envir, enclos))
- 17. │                 └─base::eval(expr, envir, enclos)
- 18. │                   └─base::eval(expr, envir, enclos)
- 19. ├─dplyr::select(...)
- 20. └─dplyr:::select.data.frame(...)
- 21.   └─tidyselect::eval_select(expr(c(...)), .data)
- 22.     └─tidyselect:::eval_select_impl(...)
- 23.       ├─tidyselect:::with_subscript_errors(...)
- 24.       │ ├─base::tryCatch(...)
- 25.       │ │ └─base:::tryCatchList(expr, classes, parentenv, handlers)
- 26.       │ │   └─base:::tryCatchOne(expr, names, parentenv, handlers[[1L]])
- 27.       │ │     └─base:::doTryCatch(return(expr), name, parentenv, handler)
- 28.       │ └─tidyselect:::instrument_base_errors(expr)
- 29.       │   └─base::withCallingHandlers(...)
- 30.       └─tidyselect:::vars_select_eval(...)
- 31.         └─tidyselect:::walk_data_tree(expr, data_mask, context_mask)
- 32.           └─tidyselect:::eval_c(expr, data_mask, context_mask)
- 33.             └─tidyselect:::reduce_sels(node, data_mask, context_mask, init = init)
- 34.               └─tidyselect:::walk_data_tree(new, data_mask, context_mask)
- 35.                 └─tidyselect:::as_indices_sel_impl(...)
- 36.                   └─tidyselect:::as_indices_impl(x, vars, strict = strict)
- 37.                     └─tidyselect:::chr_as_locations(x, vars)
- 38.                       └─vctrs::vec_as_location(x, n = length(vars), names = vars)
- 39.                         └─(function () ...
- 40.                           └─vctrs:::stop_subscript_oob(...)
- 41.                             └─vctrs:::stop_subscript(...)
-Execution halted
+# A tibble: 6 × 9
+   Time   Age Gender PID   MusicalExpertiseBinary Rating Track   Source Scale   
+  <int> <int> <fct>  <fct> <fct>                   <int> <fct>   <fct>  <fct>   
+1   628    26 Female S1    Musician                    5 Sadness Exp1   SADNESS 
+2   628    26 Female S1    Musician                    3 Sadness Exp1   CALMNESS
+3   628    26 Female S1    Musician                    1 Sadness Exp1   JOY     
+4   628    26 Female S1    Musician                    1 Sadness Exp1   ANGER   
+5   628    26 Female S1    Musician                    2 Sadness Exp1   FEAR    
+6   628    26 Female S1    Musician                    1 Sadness Exp1   POWER   
 ```
+
+Question: What is the structure of the data at this point?
+===================================
+type: exclaim
+
+* Give a short explanation of what do we have now in `df`?
+
+Checking the data: Descriptives
+====================================
+class: small-code
+
+After the munging, it is prudent to check various aspects of the data such as the N, age, and gender ... 
+
+
+```r
+source('scr/demographics_info.R')     # Reports N, Age and other details
+```
+
+```
+[1] "N = 91"
+[1] "Mean age 34.99"
+[1] "SD age 15.86"
+[1] "Youngest 18 years"
+[1] "Oldest 71 years"
+
+  Male Female  Other 
+    23     67      1 
+
+             NonMusician Music-Loving NonMusician                  Amateur 
+                      13                       44                       15 
+Serious Amateur Musician                 Semi-Pro                      Pro 
+                      11                        6                        2 
+
+Nonmusician    Musician 
+         57          34 
+```
+
+Checking the data: Descriptives
+====================================
+class: small-code
+
+Summaries are easily created with few commands such as `mean`, `sd` or `table` commands:
+
+```r
+mean(v$Age)
+```
+
+```
+[1] 34.98901
+```
+
+```r
+round(mean(v$Age),2)
+```
+
+```
+[1] 34.99
+```
+
+```r
+print(table(v$Gender)) # gender distribution
+```
+
+```
+
+  Male Female  Other 
+    23     67      1 
+```
+
+Question: Can you describe....
+===================================
+type: exclaim
+
+* ... how many emotion scales there are in the data?
+* ... how many tracks there are in the data?
+* ... how many ratings per emotion scales and tracks there are in the data?
+
+tip: table command works here well. You can also combine multiple columns into a table just by referring to multiple `table(df$Source,df$Track)`
+
+Checking the data (2): Consistency
+====================================
+class: small-code
+
+We can explore the consistency of the ratings across the people. 
+
+
+```r
+source('scr/interrater_reliability.R')
+```
+
+```
+[1] "Fastest response 7.17 mins"
+[1] "Slowest response 8291.48 mins"
+[1] "Median response 14.9 mins"
+```
+
+![plot of chunk unnamed-chunk-20](report_presentation-figure/unnamed-chunk-20-1.png)
+
+```
+
+
+Table: Inter-reliability ratings (Cronbach alphas)
+
+| SADNESS| CALMNESS|   JOY| ANGER| FEAR| POWER| SURPRISE|
+|-------:|--------:|-----:|-----:|----:|-----:|--------:|
+|   0.995|    0.994| 0.995|  0.99| 0.99| 0.962|    0.978|
+```
+
+
+Checking the data (3): Distributions
+====================================
+class: small-code
+
+We also want to look at the distributions of the collected data in order to learn whether one needs to use certain operations (transformations or resort to non-parametric statistics) in the subsequent analyses (`visualise.R`). This step will also include displaying correlations between the emotion scales which is a useful operation to learn about the overlap of the concepts used in the tasks. 
+
+
+```r
+source('scr/visualise.R')             # Visualise few aspects of the data
+```
+
+![plot of chunk unnamed-chunk-21](report_presentation-figure/unnamed-chunk-21-1.png)![plot of chunk unnamed-chunk-21](report_presentation-figure/unnamed-chunk-21-2.png)![plot of chunk unnamed-chunk-21](report_presentation-figure/unnamed-chunk-21-3.png)![plot of chunk unnamed-chunk-21](report_presentation-figure/unnamed-chunk-21-4.png)![plot of chunk unnamed-chunk-21](report_presentation-figure/unnamed-chunk-21-5.png)
+
+Checking the data (4): Look at the distributions manually
+====================================
+type: exclaim
+class: small-code
+
+Let's do some basic plotting to look at the distributions.
+
+```r
+hist(df$Age)
+```
+
+![plot of chunk unnamed-chunk-22](report_presentation-figure/unnamed-chunk-22-1.png)
+
+```r
+boxplot(Age ~ Gender, data=df)
+```
+
+![plot of chunk unnamed-chunk-22](report_presentation-figure/unnamed-chunk-22-2.png)
+
+Conclusion
+====================================
+
+* We now have mastered the **data carpentry** and **descriptives**
+  * reading excel or CSV data into R
+  * the data was labelled **badly** in _Qualtrics_, and contained **incomplete data**, which we fixed
+  * we converted from *wide-format* to *long-format*
+  * we have an explicit **coding of factors** and clear **variable names**
+  * All of these operations are saved in scripts, and can be **replicated*; any analysis starts from running these preprocessing scripts on raw data
+  * We never manually touch raw data
+
+## Next: data analysis

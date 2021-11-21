@@ -293,7 +293,7 @@ class: small-code
 
 Finally we have a clean final data frame on long format.
 ```{r}
-df <- dplyr::select(df,-Country,-Finished,-InstrumentPlayer,-Instrument,-MusicalTraining,-variable,-MusicalExpertise,-PreferredGenre)
+df <- dplyr::select(df,-Country,-Finished,-InstrumentPlayer,-Instrument,-MusicalTraining,-name,-MusicalExpertise,-PreferredGenre)
 head(df)
 ```
 
