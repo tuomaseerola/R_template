@@ -1,0 +1,526 @@
+---
+title: "Ch. 6: Basic and Inferential Statistics (extract from Music and Science book)"
+author: "Tuomas Eerola"
+date: "28/11/2021"
+output:
+  bookdown::html_document2:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+    theme: united
+    highlight: tango
+
+---
+
+# Diagnostic Visualisations and Descriptives
+
+Numerous books have been written about visualising data. In the next sections I will follow good conventions promoted by several authors on data visualisation [@tufte2016visual; @kelly2005designing; @cleveland1984graphical]. The main rule in creating a great visualisation is to allow the data to speak for itself and offer the reader all necessary information (but not more) about the graph (e.g., label the axes clearly). It is worth to mention three elements that contribute to terrible graphs.
+
+1. Some form of graphs have become popular without a merit. "Pie graphs, pie charts or pie diagrams have no right to exist in science" (@kelly2005designing, p. 18). They take a lot of space, the values cannot be easily deciphered, and we are really bad at decoding areas and angles without distorting the actual values. It is always better to replace a pie chart with a bar graph or a table. Also Bar graphs with multiple, stacked bars are hard to read or even misleading. 
+
+2. Three-dimensional graphs may look fresh in an Excel preview but they seldom provide crucial insight and are regarded as "chartjunk". This lovely term was coined by Edward Tufte [-@tufte2016visual], the inventor of the modern visual style for statistical information.
+
+3. Clutter is the enemy of clarity. Adding bells and whistles (shading, text boxes, background textures, icons, etc.) to the graphs is seldom a good idea.
+
+So you will not find pie charts, stacked bars or three-dimensional variants of the 2-D plots in the following examples. All analyses and visualisations can be found separately in the digital materials. The basic plots are illustrated with full R code. The data is available as an R library called `MusicScienceData` that can be installed from [https://github.com/tuomaseerola/MusicScienceData](https://github.com/tuomaseerola/MusicScienceData) following the instructions. 
+
+## Distributions: Histograms and Boxplots
+
+Histogram is a useful first step to visualise the pattern of responses. It will show the count of each possible response and can diagnose several issues in the data: The distribution might have impossible values, weird gaps at the middle of the scale, or all the responses are located at the lower end or the higher end of the scale, which might reflect the so-called "floor or ceiling effects" that are problematic if the instrument used to collect the data is unable to capture the full range of responses.
+
+Let's look at some example data. This is taken from music and sadness study [@eerola_peltola2016], the full data is available online at Harvard dataverse [https://doi.org/10.7910/DVN/GLSIXB](https://doi.org/10.7910/DVN/GLSIXB), and here it is read directly from within R. We focus on one set of questions related to attitudes towards sad music that was part of the study. Let's look at the item 20 which contain the responses to the statement "Listening to sad music uplifts me". The participants rated the statement from 1 to 7, where 1 was "disagree strongly" and 7 "agree strongly" with the statement.
+
+```{r prelims,message=FALSE, warning=FALSE}
+library(tidyverse)
+library(MusicScienceData)
+library(ggplot2)
+library(cowplot)
+sadness <- MusicScienceData::sadness
+```
+
+```{R histogram1,echo=TRUE,fig.cap="A histogram showing the distribution of responses to a particular question (no. 20) in Attitudes towards Sad Music (ASM) instrument.",out.width = '70%'}
+g1 <- sadness %>% 
+  drop_na(ASM20) %>%   # drop missing values 
+  ggplot(aes(x = ASM20))+
+  geom_histogram(bins=7,fill="grey50", colour='black')+
+  scale_x_continuous(breaks = seq(1,7,by=1))+ 
+  ggtitle(sadness_ASM_labels[20])+
+  ylab('Count')+
+  xlab('1 = Strongly disagree, 7 = Strongly agree')+
+  theme_bw()
+g1
+```
+
+In this particular item, Figure \@ref(fig:histogram1) displays a distribution of ratings, which are centred around 5 and generally the majority of the participants are agreeing with the statement, although there is a small number of people who strongly disagree with it as well. The next example \@ref(fig:histogram2) draws a more varied range of responses as they come from reaction times related to a decision. This allows us to explore the importance of the way the X axis is organised into “bins” in a histogram, which is often the most important organisational aspect of a histogram. In the previous example, the bins were equal to the seven response options, but if we have a wider range of response options, the width of these bins will dictate the way the histogram looks. And this is not strictly about accuracy, often more broader binning is useful to clearly demonstrate underlying trends without getting too many details that distract the communication. 
+
+
+```{R box,echo=FALSE,message=FALSE,warning=FALSE,out.width = '70%',fig.cap='Boxplot explained with ASM question 25.'}
+
+g2 <- MusicScienceData::sadness %>% 
+  drop_na(ASM25) %>%   # drop missing values 
+  ggplot(aes(y = ASM25))+
+  geom_boxplot(fill='gray50')+
+  scale_y_continuous(breaks = seq(1,7,by=1),expand=c(0.02,0.02))+
+  scale_x_discrete()+
+  coord_flip()+
+  annotate("segment",x=.55,xend=0.55,y=5,yend=7,arrow = arrow(ends = "both",length = unit(.2,"cm")),colour='gray30')+
+  annotate("text",x=.8,y=6,label='Interquartile range (IQR)',hjust=0.5,colour="gray30")+
+  annotate("text",x=.8,y=2,label='Minimum (Q1 - 1.5*IQR)',hjust=0,colour="gray30")+
+  annotate("text",x=-.65,y=6,label='Median',hjust=0.5,colour="gray30")+
+  annotate("text",x=-.65,y=5,label='Q1',hjust=0.5,colour="gray30")+
+  annotate("text",x=-.95,y=5,label='(25th percentile)',hjust=0.5,size=3,colour="gray30")+
+  annotate("text",x=-.65,y=7,label='Q3',hjust=0.5,colour="gray30")+
+  annotate("text",x=-.95,y=7,label='(75th percentile)',hjust=1.0,size=3,colour="gray30")+
+  annotate("segment",x=.70,xend=0.10,y=2,yend=2,arrow = arrow(length = unit(.2,"cm")),colour='gray30')+
+  annotate("text",x=.8,y=1,label='Outliers',hjust=0,colour="gray30")+
+  annotate("segment",x=.70,xend=0.10,y=1,yend=1,arrow = arrow(length = unit(.2,"cm")),colour='gray30')+
+  ggtitle(MusicScienceData::sadness_ASM_labels[25])+
+  ylab('1 = Strongly disagree, 7 = Strongly agree')+
+  xlab('')+
+  theme_bw()+
+  theme(plot.title = element_text(size=10))
+#  theme(text=element_text(size=16,  family=font))
+print(g2)
+
+```
+
+Figure \@ref(fig:box) shows the boxplot of the ASM question 25 with detailed explanation of the key properties of boxplots (median, interquartile range, outliers).
+
+
+```{R histogram2,echo=TRUE,warning=FALSE,out.width = '80%',fig.cap='Histograms with various bins and trimming.'}
+d <- MusicScienceData::priming
+
+g1<-ggplot(d,aes(x=RT))+
+  geom_histogram(binwidth=100,colour='grey50',fill='white')+
+  ggtitle('Bin width 100')+
+  ylab('Count')+
+  xlab('Reaction time (ms)')+
+  scale_x_continuous(breaks=seq(0,2000,by=400))+
+  theme_bw()
+
+
+g2<-ggplot(d,aes(x=RT))+
+  geom_histogram(binwidth=10,colour='grey50',fill='white')+
+  ggtitle('Bin width 10')+
+  ylab('Count')+
+  xlab('Reaction time (ms)')+
+  scale_x_continuous(breaks=seq(0,2000,by=400))+
+  theme_bw()
+
+g3<-ggplot(dplyr::filter(d,RT>200 & RT<1500),aes(x=RT))+
+  geom_histogram(binwidth=10,colour='grey50',fill='white')+
+  ggtitle('Bin width 10 with trimming')+
+  ylab('Count')+
+  xlab('Reaction time (ms)')+
+  scale_x_continuous(breaks=seq(200,1500,by=200),limits = c(0,2000))+
+  geom_vline(xintercept = c(200,1500),linetype='dashed')+
+  theme_bw()
+
+
+g4<-ggplot(dplyr::filter(d,RT>200 & RT<1500),aes(x=RT))+
+  geom_histogram(binwidth=10,colour='grey50',fill='white')+
+  geom_density(aes(y=10 * ..count..),alpha=0.5,colour='black',fill=NA)+
+  ggtitle('Bin width 10 density with trimming')+
+  ylab('Count')+
+  xlab('Reaction time (ms)')+
+  scale_x_continuous(breaks=seq(200,1500,by=200))+
+  theme_bw()
+
+G<-cowplot::plot_grid(g1, g2, g3, g4, nrow = 2)
+print(G)
+```
+
+The four graphs displayed in Figure \@ref(fig:histogram2) show the distribution of reaction times to a question of whether a word displayed in the computer screen is negative or positive. It is a simple task and people can make this decision in half a second after seeing the word appear. However, when they are exposed to an emotional sound at the same time (here we have used either negative or positive music examples from a collection of film soundtracks), the participants' responses will be faster or slower depending on the congruence or incongruence of the musical valence (positive or negative) with the word; If they hear positive music and see a negative word, it takes them more time to respond as the combination is jarring conceptually and the listener unconsciously works out the decision about the word despite the opposite associated delivered via sound. If the word and the music are congruent, participants tend to be faster and more accurate than in incongruent pairins. This paradigm, called priming, is often used to explore whether  concepts, sounds or images are perceived as negative or positive (this data comes from @armitage2019). 
+
+The really interesting part of this approach is that these types of responses are automatic and impossible to consciously manipulate in contrast to self-reports (where the participant may try to please the researcher or to answer in a way that is most typical). The top left panel shows the distribution of reaction times in 100 millisecond bins and the top right has the same data divided in 10 millisecond categories. The two panels emphasize slightly different aspects of the data; the peak is more distinct in the shorter binning, but the accuracy itself brings some noise to the figure as well. Both graphs show an odd peak around 2 seconds, which actually relates to the slowest allowed response time, so these are actually responses that responded too late. In the lower panels, the responses that are too fast (faster than 150 ms) or too slow to be meaningful (>1500 ms) have been trimmed away (shown as the dashed lines in the lower left panel) as this is one of the common ways to remove noise from such data. Finally, the lower right panel illustrates another common way of displaying distributions based on the estimated density of the underlying distribution (the black line drawing the clear outline of the distribution).
+
+Instead of looking at the whole distribution, we are often keen to know the central tendencies of the distributions, and especially how the means of the data look like. Before calculating the mean, it is a good habit to explore how reliable the mean is as a descriptor of the central tendency. Boxplots are handy for this purpose as they offer an easy visualisation of the median value, and the middle 50% of the observations (this is the area above the 25th percentile, technically called Q1 and below 75th percentile, Q3), and the minimum and the maximum. This middle part of the data is called the _interquartile range_ (IQR, from Q1 to Q3) and gives a rough account of where most of the observations are. Boxplots often show _outliers_, which are observations that are far away from the interquartile range. To be precise, these are 1.5 times smaller than Q1 or larger than Q3 and refer to rare extremes in the observations. Outliers can be problematic for many statistical operations and we will deal with the outliers in a later section (\@ref(outliers)).
+
+```{R boxplot2, echo=TRUE, fig.cap="A box plot showing the distribution of responses to a particular question (no. 23) in Attitudes towards Sad Music (ASM) instrument.", out.width = '60%'}
+g2 <- sadness %>% 
+  drop_na(ASM23) %>%   # drop missing values 
+  ggplot(aes(y = ASM23))+
+  geom_boxplot(fill='gray50')+
+  scale_y_continuous(breaks = seq(1,7,by=1))+
+  scale_x_discrete()+
+  ggtitle(sadness_ASM_labels[23])+
+  ylab('1 = Strongly disagree, 7 = Strongly agree')+
+  theme_bw()
+print(g2)
+```
+
+In Figure \@ref(fig:boxplot2) we see that the ASM item 23 ("I listen to sad music when I am sad") receives responses that commonly are around 5 (median is five), so people tend to agree with the statement. The majority (actually, exactly 50%) of the responses lie between 4 and 6. A small minority of people disagree and the minimum is 1.
+
+The visualisation of the distributions can be of course enriched with grouping data or the original observations if this adds value to the graph. In Figure \@ref(fig:advanced-histograms), the ASM questions are shown with variations of these plots. In panel A we see the distribution of the responses to question 1 are actually quite different by men and women; women tend to agree with the statement that they listen to sad music only in a certain state of mind. Notice that the minority of all participants pick the middle option in the scale. In panel B the questions 1 to 4 have been displayed in a single graph and the boxplots have additionally been divided according to gender to diagnose other questions where gender might play a role. ASM4 seems to be one such a question ("Sad music intensifies my own negative feeling") where a prominent gender difference is shown. Panel C shows a boxplot of the ASM question no. 12 overlaid with raw responses. Notice how the boxplot displays the value of 7 as an outlier (exceedingly rare occurrence) but if you look at the raw responses, there are about ten or so responses, which is still exceedingly rare considering that the data has 1570 observations (10 is 0.637%). 
+
+```{r advanced-histograms, echo=FALSE,fig.cap="Alternative visualisation of data. A: density plot across gender, B: multiple boxplots, C: boxplot overlaid with original data, D: violin plot with mean and median overlaid.",out.width = '70%'}
+
+
+tmp<-as_tibble(MusicScienceData::sadness)
+
+sadness_ASM_labels<-c(
+  "ASM1: I listen to sad music only in a certain state of mind",
+  "ASM2: Listening to sad music relaxes me",
+  "ASM3: I regulate my own negative feelings by listening to sad music",
+  "ASM4: Sad music intensifies my own negative feelings",
+  "ASM5: Listening to sad music makes me feel grateful for the things in my life",
+  "ASM6: Sad lyrics are an essential part of the sadness expressed by music",
+  "ASM7: When I listen to sad music, I feel that my own negative feelings are justifiable",
+  "ASM8: When I listen to sad music, I feel that I am not alone with my feelings",
+  "ASM9: Listening to sad music gives me strength",
+  "ASM10: Sad music irritates me",
+  "ASM11: Listening to sad music induces unpleasant feelings in me",
+  "ASM12: Listening to sad music makes me anxious",
+  "ASM13: Listening to sad music makes me tired",
+  "ASM14: I sometimes deliberately seek sadness by listening to sad music",
+  "ASM15: Sad music can make me sad although I felt happy before listening to it",
+  "ASM16: Sad music sounds more genuine to me than happy music",
+  "ASM17: My appreciation of life grows when I listen to sad music",
+  "ASM18: Sad music reminds me that we, as mortal beings, have only a limited amount of time in our lives",
+  "ASM19: The feelings I am experiencing while listening to sad music, are evoked by memories associated with the music",
+  "ASM20: Listening to sad music uplifts me",
+  "ASM21: Feelings induced by sad music are dependent on my current situation in life",
+  "ASM22: I do not want to listen to sad music when I am sad",
+  "ASM23: I listen to sad music when I am sad",
+  "ASM24: Sad music reminds me of the tragedies of my personal life",
+  "ASM25: I easily empathize with the sad atmosphere or narrative conveyed by sad music")
+
+
+g1 <- MusicScienceData::sadness %>% 
+  drop_na(ASM1) %>%   # drop missing values 
+  ggplot(aes(x= ASM1,color=gender))+
+  geom_density(adjust=1.25)+
+  scale_color_grey(name='Gender')+
+  scale_x_continuous(breaks = seq(1,7,by=1))+
+#  scale_x_discrete()+  
+  ggtitle(sadness_ASM_labels[1])+
+  ylab('Density')+
+  theme_bw()
+
+tmp2<-tmp[,c(3,7:10)]
+dfl <- pivot_longer(tmp2,cols = c(2:5))
+
+g2 <- dfl %>% 
+  drop_na(value) %>%   # drop missing values 
+  ggplot(aes(x=name,y = value,fill=gender))+
+  geom_boxplot(outlier.shape ="")+
+  scale_y_continuous(breaks = seq(1,7,by=1))+
+  scale_x_discrete()+
+  scale_fill_grey(start = .75, end=.25, name="Gender")+
+  ggtitle('ASM items 1 to 4')+
+  ylab('Disagree - Agree')+
+  xlab('Item')+
+  theme_bw()+
+  theme(legend.justification=c(1,0), legend.position=c(0.95,0.70))
+
+g3 <- MusicScienceData::sadness %>% 
+  drop_na(ASM12) %>%   # drop missing values 
+  ggplot(aes(x=1,y = ASM12))+
+  geom_boxplot(fill='gray70')+
+  geom_jitter(alpha=0.13,colour='black', width = 0.33)+
+  scale_y_continuous(breaks = seq(1,7,by=1))+
+  scale_x_discrete()+  
+  ggtitle(sadness_ASM_labels[12])+
+  ylab('Disagree - Agree')+
+  xlab('ASM12')+
+  theme_bw()
+
+g4 <- MusicScienceData::sadness %>% 
+  drop_na(ASM13) %>%   # drop missing values 
+  ggplot(aes(x=1,y = ASM13))+
+  geom_violin(fill='grey70',adjust=1.2,alpha=0.50)+
+  scale_y_continuous(breaks = seq(1,7,by=1))+
+  scale_x_discrete()+  
+  stat_summary(fun = median, fun.min = median, fun.max = median,
+               geom = "crossbar", width = 0.9)+
+  stat_summary(fun = mean, fun.min = mean, fun.max = mean,
+               geom = "crossbar", width = 0.9,colour='gray50')+
+  ggtitle(sadness_ASM_labels[13])+
+  annotate("text",x=1.6,y=mean(MusicScienceData::sadness$ASM13,na.rm = TRUE),label='Mean',hjust=0)+
+  annotate("text",x=1.6,y=median(MusicScienceData::sadness$ASM13,na.rm = TRUE),label='Median',hjust=0)+
+  ylab('Disagree - Agree')+
+  xlab('ASM13')+
+  theme_bw()
+
+G1 <- plot_grid(g1,g2,g3,g4,labels = c("A", "B", "C", "D"),ncol = 2, nrow = 2)
+G1
+```
+
+The final panel D introduces an alternative visualisation of the distribution, called the violin plot. This highlights the density of the values at each point in the distribution. I have added mean (2.6) and median (2.0) to the violin plot just to illustrate that they are not often the same and that the mean is easily influenced by values further away from the mean.
+
+## Descriptives {#descriptives}
+
+Now that we have the basic tools of exploring the distribution of the data, we can move on the basic descriptors of the data such as the number of observations (N), mean (M), median (Md), standard deviation (SD), confidence interval (CI), and range. 
+
+```{r summarytable,results='asis'}
+# 04_03_table_example.R
+table1<-MusicScienceData::sadness %>%
+  drop_na(ASM20) %>%   # drop missing values 
+  group_by(age) %>%
+  summarise(n=n(),mean_cl_normal(ASM20))
+colnames(table1)<-c('Age','N','M','95% CI LL','95% CI UL')
+knitr::kable(table1,digits = 2, format='simple',
+  caption = 'The means of the ASM question 20 across the age groups.')  
+```
+
+Switching back to the survey responses to sad music, Table \@ref(tab:summarytable) shows the descriptive summary of the participant answers to the question 20 across the six age groups. These kinds of summaries are very useful in deciding what to report, to assess the data quality, and when used sparingly, can communicate the pattern of findings effectively. And they are not difficult to obtain either.
+
+Here's a simpler version of how to calculate mean and standard deviation of a variable. Substituting median for mean is easy and getting other measures of variation (standard error, or confidence intervals) is not much more difficult.
+
+```{r descriptives}
+mean(MusicScienceData::sadness$ASM20,na.rm = TRUE) # Mean (ignore missing values)
+sd(MusicScienceData::sadness$ASM20,na.rm = TRUE)   # Standard Deviation
+```
+
+## Central Tendencies: Bar charts and Error Bars
+
+When we are about to compare groups, it is helpful to visualise the means of the variables based on different ways to group them. It is easy to calculate the means or median and show these, but this is only half the information as we want to know how solid the means are. For this reason, error bars play an important role in any graph displaying the means as it is really the variation that tells us whether the means are actually quite similar, slightly overlapping or very different. In the inferential statistics section (\@ref(inferential)) we will of course see how such a difference will be work out in statistical terms, but a good graph goes a long way into communicating this to the reader.
+
+```{r barplot1, echo=TRUE,fig.cap="A bar graph showing the means of the responses to the question no. 20 in Attitudes towards Sad Music (ASM) instrument across gender.",out.width = '80%'}
+g3 <- sadness %>% 
+  drop_na(ASM20) %>%   # drop missing values 
+  group_by(gender) %>%
+  summarise(mean= mean(ASM20),ci = mean_cl_normal(ASM20)) %>% 
+  ggplot(aes(x = gender,y = mean,fill=gender))+
+  geom_col(colour='black',show.legend = FALSE)+
+  geom_errorbar(aes(ymin=ci$ymin,ymax=ci$ymax),width=0.5)+
+  scale_y_continuous(breaks = seq(1,7,by=1), expand = c(0,0))+
+  scale_fill_grey(start=.25,end=.75)+
+  coord_cartesian(ylim = c(1, 7)) +
+  ggtitle(sadness_ASM_labels[20])+
+  ylab('Mean ± 95% CI')+
+  xlab('Gender')+
+  theme_bw()
+print(g3)
+```
+
+In Figure \@ref(fig:barplot1) we see that the ASM item 20 ("Listening to sad music uplifts me") receives slightly different mean responses from men and women. The difference does not seem be large (for women, the mean (M) is 4.59 and the 95% confidence interval (CI) of this mean is from 4.51 to 4.67, and for men, M=4.96, 95% CI 4.84-5.08) but when you have looked at the confidence intervals closely, you will see that they do not overlap. This would suggest that the difference is at least statistically speaking significant. Why there is a difference between men and women in this question, is another matter, and will not be explored here. 
+
+
+In a slightly more elaborated example we plot the means and confidence intervals of another question from ASM across different levels of musical expertise. Here musical expertise has been simply coded by the participant's own self-nomination into five broad categories (nonmusicians, music lovers, amateur musicians, semi-professional musicians, and professional musicians), which has been derived from one question version of the _Ollen Musical Sophistication Index_ [@Zhang2019] although there are much more nuanced tools for this information out there [@mullensiefen2014musicality]. Nevertheless, Figure \@ref(fig:barplot2) shows how the lyrics are an essential part of the sadness expressed by music. Generally the participants agree with this statement, but perhaps musicians (especially instrumentalists, not singers) express lower agreement to this as their experiences of expressing sadness is not necessarily dictated by lyrics. We don't know why semi-professional and professional musicians tend to de-emphasize lyrics compared to others, but it is also worth noticing that the variation is much larger for two sub-groups of experts than for the other groups, which reflects the smaller amount of participants belonging to these expert groups and the divided opinions within them.     
+
+```{r barplot2, echo=FALSE,fig.cap="A bar graph showing the means of the responses to the question no. 6 in Attitudes towards Sad Music (ASM) instrument across musical expertise.",out.width = '80%',warning=FALSE,message=FALSE}
+tmp<-MusicScienceData::sadness
+
+tmp$expert<-factor(tmp$expert)
+tmp$expert<-factor(tmp$expert,levels=c('Amat.','MusicL','NM','Pro','Semi-pro'),labels=c('Nonmusician','Music-lover','Amateur musician','Semi-pro musician','Professional musician'))
+
+g2<-tmp %>% 
+  drop_na(ASM6) %>%   # drop missing values 
+  ggplot(aes(x = expert, y = ASM6)) +
+  stat_summary(fun = "mean", geom = "bar", alpha = .7) +
+  stat_summary(fun = "mean", geom = "point", 
+               size = 1) +
+  stat_summary(fun.data = "mean_cl_normal",
+               geom = "errorbar",
+               width = .5) +
+  ylab('Mean Rating ± 95% CI')+
+  ggtitle(MusicScienceData::sadness_ASM_labels[6])+
+  scale_x_discrete(labels=function(x){sub("\\s", "\n", x)},name="Musical Expertise")+
+  coord_cartesian(ylim = c(1, 7)) +
+  scale_y_continuous(breaks = 1:7, expand = c(0,0))+
+  theme_bw()
+g2
+
+```
+
+We will explore the differences evident in the responses across the musical expertise later in the inferential statistics (section \@ref(inferential)).
+
+
+## Patterns between Variables: Scatter Plots
+
+When the interest is to explore the relationships between two continuous variables, visualising them in different axes can be informative. This type of graph, called scatter plot, can demonstrate a pattern of correlation, the direction and the magnitude of the association between variables.
+
+```{R soundtracks, echo=TRUE, warning=FALSE, fig.cap="A scatterplot showing the means of the ratings to 110 film soundtrack excerpts using scales tension and valence in Eerola and Vuoskoski (2011).", out.width = '90%'}
+g4<-ggplot(soundtrack) +
+  aes(x = Valence, y = Tension, colour = TARGET_EMOTION,
+      label=Number,
+      shape= TARGET_FRAMEWORK) +
+  geom_point(size=4,alpha=0.80,show.legend=FALSE) +
+  coord_fixed(ratio = 1)+
+  geom_smooth(aes(shape = NULL,colour=NULL),method="lm", 
+              formula='y ~x',se=FALSE, fullrange=TRUE, 
+              level=0.95, colour='grey50',
+              linetype='dashed',show.legend = FALSE)+
+  geom_text(show.legend=FALSE,color='white',size=1.7)+
+  scale_colour_grey(name='Emotion',start = .6,end = 0)+  
+  scale_shape(name='Framework')+  
+  scale_x_continuous(breaks=seq(1,9,by=2),limits=c(1,9))+
+  scale_y_continuous(breaks=seq(1,9,by=2),limits=c(1,9))+
+  theme_bw()
+print(g4)
+```
+
+Figure \@ref(fig:soundtracks) displays the mean tension and valence ratings of a bunch of clips extracted from film soundtracks [@eerola_vuoskoski2009]. These have been labelled with numbers referring to the individual tracks and the shape of the markers relate to the emotion framework the clips were selected from (basic emotions or dimensional framework of emotions). There is a strong negative correlation between tension and valence, and this trend, although not shown as a correlation, is drawn in the plot with a dashed line (trend line, obtained by calculating a least-squares fit with the data points. Basically what the graph is saying is that when music examples are rated as very tense, they tend to be rated as negative or unpleasant. And when the film music examples are rated as pleasant and positive, they also tend to be rated as relaxed or having low tension. We will calculate the correlation coefficient and the related probability value in the section about inferential statistics (\@ref(inferential)).
+
+# Inferential Statistics {#inferential}
+
+Inferential statistical analysis is a process where some property of the sample is inferred in relation to a population. How likely it is that the values represented by the sample are different from the population. The rationale here is that every time you sample something, the numbers will differ from the population mean, but whether the difference is just random variation or an indicator of a true underlying difference, requires testing the inference through statistical means. In a common _frequentist inference_, the testing proceeds by choosing the test statistic appropriate for the distribution, and makes the inference based on relating the observations to the underlying distribution. The outcome of the process are (1) the test statistics and (2) probability values (often abbreviated as _p-values_) that give the probability of the test results that are as extreme as the results observed. In this way, a small p-value (say _p_=0.01) tells us that this outcome is very rare (happens in 1% of the cases). This probability value is then used to accept or reject _null hypothesis_, which is simply a shorthand for something that does not exist, meaning there is no correlation or there is no difference between the means. Let's look at the concepts in more detail. 
+
+## Hypothesis testing and p-values
+
+In the frequentist paradigm, when the analysis produces a small p-value, and leads to reject the null hypothesis which is basically saying that yes, we have something here which differs significantly from the assumption that everything is similar or unrelated (null hypothesis) and we have evidence to support the alternative, actual research hypothesis. The smaller the p-values are, the stronger is the evidence against the null hypothesis and in support of the defined hypothesis that you set out to test with your inferential statistic in the first place. The p-values are usually interpreted within few arbitrarily defined thresholds under which the tests are thought to be significantly different; p-value of 0.05 is the magical threshold which is traditionally used as the first cut-off between significant and non-significant. It simply says that this result may crop up randomly 5% of the time (1 out of 20), which is relatively low probability, but if you think about it, it does turn up every 20th time with data consisting of random numbers. And indeed, this is one of the most abused arbitrary thresholds in statistics^[see https://www.nature.com/articles/506150a]. Lower thresholds for p-values such as p-value of 0.01 or 0.001 are used as more robust thresholds to indicate higher significance and less likely occurrence by chance. All these thresholds can sometimes be substituted symbols such as \*_p_<.05, \*\*_p_<.01, and \*\*\*_p_<.001, which is a particularly useful convention in tables. Note that some formatting conventions do omit the leading zero from the p-values. The downside of all these thresholds are that they are easily abused, misunderstood, and subject to various problems related to multiple testing and violations of the underlying assumptions (see Bayesian statistics, section xxx). 
+
+## Inferential tests for different designs and variable types
+
+For different designs (group comparison, or continuous variables) and different types of variables (continuous or categorical), there are different inferential tests. The most common ones compare means (and are called t tests and ANOVAs) or measure associations (and are known as correlations, regression, and $\chi^2$^[pronounced `kaɪ skweə(r)`] tests). In Figure \@ref(fig:menu-of-statistical-tests), I have drawn a menu of the options that dictate which tests are plausible given the variable type and the grouping. All highlighted inferential tests assume that the continuous numerical data is normally distributed (they are not skewed) and if they violate this assumption, there is a variant for each test that handles the data differently (calculates ranks instead of means and so on). These so-called _non-parametric tests_ still function essentially in a similar manner than the tests (which are called _parametric tests_ in statistical jargon) shown in the diagram.
+
+```{r menu-of-statistical-tests, echo=FALSE,fig.cap="A menu of options for inferential tests and their implementation in R.",out.width = '100%'}
+#knitr::include_graphics(file.path(img_path,"menu_of_statistical_tests.pdf"))
+```
+
+When you want to compare means between two groups, the appropriate inferential statistics is two-sample t test or quite often just t test. There will be examples of this test in a subsequent section. When your variables are both continuous, you can carry out correlation test or linear regression. If you deal with categorical data, basically counts of things, then the menu of options relates to $\chi^2$ testing or its variants. There will be an example of each type of test later on.
+
+## Reporting inferential tests
+
+When inferential tests are reported, you need to tell the reader (1) what inferential test was used, (2) what was the numeric outcome of the test in the form of the test statistic (_t_, _F_, _r_, or $\chi^2$ to name the most common ones), (3) tell the reader how many degrees of freedom were there, and (4) you need to relate this inferential test quantity to the probability, the p-value from the test. This is the full report of the result of your inferential test. The degrees of freedom is related to the amount of observations you have^[The degrees of freedom calculation assumes that the statistical test decreases the number of degrees of freedom your test has by 1 or 2 (or it can be a much more complex issue in advanced tests). If you have 100 observations, and you calculate correlation coefficient between two variables, the degrees of freedom is 98 (100-2, observations minus two parameters)]. 
+
+In summary, you need to provide three numbers which are reported in a very specific way and you need to be able to explain in plain language what this test really means and how does it answer the hypothesis. Usually the explanations are easier to understand if you mention the means (M) and some form of indicators of variations (standard deviations, standard errors or confidence intervals) when explaining the results. The section \@ref(descriptives) about descriptives may prove useful here.   
+
+Let's look at a typical example of reporting of statistics concerning group differences. This example refers to expressive performance in music and concerns to the durations of bars which often vary in expressive performances:
+
+>“As a comparison, a t-test between the two sets of bar durations whose means are shown in Figure 9.5 gives a smaller but still significant value of t(3.395; p = 0.0022). Hence, the timing of the two performances was reliably different, but only by a tiny amount (85 milliseconds).” 
+(Windsor, 2004, p. 214)
+
+The first sentence is clear and also gives the statistical jargon embedded into the sentence. It does mention the t-test, and the p-value. The second sentence explains in plain terms what the statistical jargon is telling us. Here the comparison is between two sets of durations, but similar rules would apply to reporting correlations (tell the reader the test statistic, in this case it would be _r_, the amount of observations, and the p-value, and finally interpret and explain).
+
+# Comparison of Means
+
+## T-test: Comparison of Two Groups
+
+Let's look at the inferential tests for the Figure \@ref(fig:barplot1) which showed a possible difference in gender in the question that related to claim that "sad music uplifts the listener". Here we have a continuous variable (ratings of the statement on a scale of 1 t 7) and a categorical grouping variable (gender). Now we want to know whether this difference shown in Figure \@ref(fig:barplot1) is statistically significant or only part of normal random variation. As part of the inferential testing, we run a _t test_. We also calculate the means and standard deviations just to make the reporting easier.
+
+```{r,error=FALSE,warning=FALSE,echo=TRUE,message=FALSE}
+library(MusicScienceData)               # loads library w data
+df <- MusicScienceData::sadness         # define data
+t <- t.test(ASM20 ~ gender, data=df)    # t test
+print(t$statistic)                      # show the t value  
+print(scales::pvalue(t$p.value))        # print the p value
+
+summarise(group_by(df, gender), # means and SDs
+   M=mean(ASM20,na.rm=TRUE),
+   SD=sd(ASM20,na.rm=TRUE))
+```
+
+The results of the t test indicate that the _t_ value is -5.05 and the p-value is smaller than 0.001, suggesting that there is a difference between the ratings given by men and women. Using the terms of the hypothesis testing, this suggest that we cannot support the null hypothesis but have to side with alternative hypothesis, according to which men and women have rated this question statistically significantly differently. The mean rating for men is 4.96 (SD=1.24) whereas women gave this question lower ratings on average (M=4.59, SD=1.37). What this difference tells about the topic itself, is not of course clear from this analysis, but at we are alerted that there are substantial differences in responses to the questions that relate to gender (and perhaps age and expertise as well). The latter idea can be tested using a related inferential test, explored next.
+
+## ANOVA: Comparison Between Multiple Groups
+
+Using the same data and question as above, we can explore whether this item (continuous variable) draws out differences across a categorical variable, namely the six different age groups present in the data. The appropriate inferential test is analysis of variance, or ANOVA (ANalysis Of VAriance).
+
+```{r,error=FALSE,warning=FALSE,echo=TRUE,message=FALSE}
+library(MusicScienceData)               # loads library w data
+df <- MusicScienceData::sadness         # define data
+ANOVA <- aov(ASM20 ~ age, data=df)      # ANOVA
+F <- summary(ANOVA)                     # Summarise
+print(F)
+```
+
+The results are summarised in the output, particularly in the line starting with `age` and displaying the critical numbers under the headings of `Df`, `Sum Sq`, `Mean Sq`, `F value`, and `Pr(>F)`. From the results we gather that there is a significant difference between the responses give by some of the age groups for this item (_F_ value is 3.32, there were 5 degrees of freedom (six groups were compared) and the _p_ value is 0.0055). The report also tells us some other useful things such as there were seven missing observations in the data. This analysis _does not_ reveal what groups actually differ from each other at this stage, the anova analysis merely suggests that there is a difference somewhere between the groups. Finding out the specific group differences will require further testing (using so-called _post-hoc tests_). Let's carry out one of the most common post-hoc test, called _Tukey's Honestly Significant Differences_, which guards against multiple comparisons by adjusting the p-values so that you are less likely to find significance just because there are multiple comparisons. It is very much relevant here as we have 6 groups leading to 15 different combinations of the groups, which already makes the likelihood of us finding a difference in the data by chance exceedingly high. However, this operation lowers the p-values (and other operations such as Bonferroni correction that can correct for familywise error rates).  
+
+```{r,error=FALSE,warning=FALSE,echo=TRUE,message=FALSE,results='asis'}
+TABLE<-TukeyHSD(ANOVA,conf.level = 0.95)
+
+print(knitr::kable(TABLE$age,digits = 3,
+                   caption = 'Comparison of age groups 
+                   for Item 20 in ASM survey.',
+                   format = 'simple'))
+
+```
+
+The table reveals that most of the differences between the age groups are fairly small (see diff column in the output) and only the difference of 0.493 between 55 to 64 and 18 to 24-year-olds is significantly different at the p-level of 0.004. The rest of the adjusted p-values -- which incorporate the issue of multiple testing and the different number of participant in different age groups -- are above 0.05.  
+
+We might suspect than gender and age work together in some way. These two important background elements, age and gender, might _interact_ in this question. One way of finding this out is to put these into the same analysis. Let's run a _two-way ANOVA_ on the same question as before to see whether there is an interaction between two factors.
+
+```{r anovamore,error=FALSE,warning=FALSE,echo=TRUE,message=FALSE}
+library(MusicScienceData)               # loads library w data
+df <- MusicScienceData::sadness         # define data
+ANOVA2 <- aov(ASM20 ~ age * gender, data=df)  # ANOVA
+F2 <- summary(ANOVA2)
+print(F2)
+```
+
+The results again show a significant main effect of age and gender, but when we look at the row which has `age:gender` at the beginning, which is a shorthand notation to test their interaction, this does not seem to be particularly strong (_F_=1.40, _p_=0.26) and not statistically significant. So, it turns out that while this question is impacted by both gender and age, there is no special combination of, say, older or younger men that would answer this question entirely differently from older or younger women.
+
+## Comparison of multiple observations per group (within-participant designs)
+
+It is much more common in music and science studies have designs where participants give repeated observations within the experiment. This is called _within-participant design_ and requires slightly more advanced analysis, which we will cover in _Linear Mixed Models_. 
+
+# Measures of Association
+
+## Correlation
+
+Correlation measures the association between two variables, where -1.00 is the perfect negative linear relationship, +1.00 is the positive relationship, and values around 0 tend to tell the analyst that there is no association. To be precise, there are several correlation coefficients, the most common being Pearson correlation coefficient (_r_), named after Karl Pearson (in the 19th century). Pearson correlation coefficient is suitable for normally distributed variables (which also assumes that the variables are measured with interval scales). There is a variant measure that is suitable for data that comes from ranked measures or does not really fall under normal distribution, and this is called Spearman's rank correlation coefficient ($r_s$), which also ranges from -1.00 to +1.00 with a similar type of interpretation as the Pearson correlation coefficient.
+
+Let's apply correlation to familiar data from the visualisation section. The pattern shown in Figure \@ref(fig:soundtracks) suggested that there is a strong negative association between the ratings of valence (which relates to a continuum of emotions that range from negative or positive) and tension (i.e. from relaxed to tense) when participants rated 110 film music examples using these two concepts. Let's calculate the correlation coefficient and obtain an estimate of the probability of this correlation coefficient is occuring by chance.
+
+```{r correxample,error=FALSE,warning=FALSE,echo=TRUE,message=FALSE}
+library(MusicScienceData)               # load library w data
+data <- MusicScienceData::soundtrack    # define data
+r <- cor.test(data$Valence, data$Tension) # calculate correlation
+print(r$estimate)                       # print coefficient
+print(scales::pvalue(r$p.value))        # print simplified p value 
+print(r$parameter)                      # print df
+```
+
+This correlation analysis would be reported as a significant negative correlation between valence and tension, _r_(108)=-0.83, _p_<.001. Here -0.827 is the correlation coefficient, the value within the brackets is the degrees of freedom (_df_). The exact p-value actually is `2e-16`, which  means it is 0.0000000000000002 (that's fifteen 0s), very close to zero. It is good to note that this p-value is reported as _p_<.001 as in principle a probability value cannot be zero in statistics.
+
+Often one wants to see how multiple variables correlate; and for that, calculating a correlation matrix between all variables can be done in a single command in R:
+
+```{r corrtable,error=FALSE,warning=FALSE,echo=TRUE,results='asis'}
+library(MusicScienceData)             # loads library w data
+data <- MusicScienceData::soundtrack  # define data
+CM <- cor(data[,2:8])  # Calculate correlation between 
+                       # all columns from 2 and 8
+knitr::kable(CM,
+       digits = 2,
+       caption = 'Correlation matrix (soundtrack data).',
+       format = 'simple')
+```
+
+## Regression
+
+Regression analysis is an expansion of correlation where you combine multiple variables to predict one variable. 
+
+Let's take an example. The ratings about perceived valence and tension in film music soundtracks presented earlier (Figure \@ref(fig:soundtracks)) could relate to the acoustic and musical properties of those tracks. We can pull out some pre-calculated acoustic descriptors of the tracks to try to explain the tension ratings with acoustic features.
+
+Let's first look how four acoustic descriptors correlate with the ratings of energy. These acoustics features relate to dynamics (RMS) and timbre such as spectral centroid (`sp_centr`), spectral roll-off (`spec_rolloff`), and zero-crossing. Two of the spectral descriptors relate to perceptual brightness (centroid and roll-off), but zero-crossing have no direct perceptual explanation.
+
+```{r regressionprep, error=FALSE,warning=FALSE,echo=TRUE}
+library(MusicScienceData)               # loads library w data
+d1 <- MusicScienceData::soundtrack      # get ratings
+d2 <- MusicScienceData::soundtrack_features[,c(2:3,5:6)] # get d[,17:22] <- 
+d1[,17:21] <- as.data.frame(scale(d2))  # normalise (mean 0 and SD 1)
+
+tmp <- cor(d1[,c(3,17:20)]) # get correlations
+print(round(tmp[2:5,1],2))  # display first line
+```
+
+Let's the do the regression analysis. 
+
+```{r regression,error=FALSE,warning=FALSE,echo=TRUE}
+
+model.reg <- lm(Energy ~ RMS + sp_centr + spec_rolloff + spec_zcr,
+                data = d1)
+s <- summary(model.reg) 
+print(s)
+```
+The regression analysis shows that Energy ratings can be predicted to a moderate degree ($R^2$=0.4504) by these four acoustic features. $R^2$ is interpreted as the variance explained, where 1.0 would be 100% of variance and 0.0 would be nothing at all. Here the features explain 45% of variation in the Energy ratings. Regression analysis comes with an overall test statistic, _F_ (here 21.52) and degrees of freedom (105, starting from 110 observation minus five for 4 variables and a constant), and p-value (here 5.528e-13, or simply _p_<.001). 
+
+If we look at the table more carefully, we notice that only some acoustic features  contribute to this model. The first column (`Estimate`) tells us the standardised regression coefficient (AKA beta coefficient or beta weight, or $\beta$). This is the coefficient by which the acoustic feature values are multiplied in order to obtain the best fitting model. For RMS, the standardised beta is 0.91, and there is a separate test statistic associated with including this feature in the regression, namely t-test (t-value of 41.9) and associated p-value (2e-16 or <.001). Another acoustic feature, namely spectral roll-off, seems to be contributing to the regression model, although its contribution is much weaker than RMS (the beta coefficient is 1.97 and p-value 0.041). You could express the regression model as 
+
+\begin{equation}
+Y_i =  b_0 + b_1 X_{i1} + b_2 X_{i2} + \epsilon_i
+\end{equation}
+
+Which in this case would be
+\begin{equation}
+Y_i = 5.48 + 0.91 \cdot RMS + -1.91 \cdot spcentr
+\end{equation}
+
+[to be continued]
+
+## Cross-tabulation
+
+Another measure of association (chi square, etc.) ...
+
