@@ -13,4 +13,3 @@ S <- tmp %>%
 # Create a nice table with kable and knitr
 print(knitr::kable(S,digits = 2,caption='Ratings of Sadness across Tracks and Source.'))
 
-rm(S,tmp)

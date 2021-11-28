@@ -24,8 +24,15 @@ source('scr/interrater_reliability.R')    # Runs quality checks, response speed,
 source('scr/visualise.R')                 # Visualizes few aspects of the data
 
 #### ANALYSE data ---------------------------------------------------------------------------
+# Compare means
+source('scr/figure1.R')                   # Creates Figure 1: Single factor
 source('scr/compare_means.R')             # Compares Sources and Tracks across Emotion Scales
-source('scr/table1.R')                    # Creates an example table (means and variance of sadness)
-source('scr/figure1.R')                   # Creates Figure 1 for manuscript
+source('scr/compare_posthocs.R')          # Follow-up: which target emotions are different?
+source('scr/compare_contrasts.R')          # Follow-up: Are sadness tracks rated as more sad compared with others (contrast)?
+
+source('scr/table1.R')                    # Creates Table using two factors (means and CIs of sadness)
+source('scr/figure2.R')                   # Creates Figure 2: Two factors
+
+source('scr/correlations.R')               # Correlation
 
 print("All scripts completed")
