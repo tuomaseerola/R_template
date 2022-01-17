@@ -1,0 +1,145 @@
+---
+title: "Data analysis III: Linear Mixed Models"
+author: "Tuomas Eerola"
+date: "18/1/2022"
+output:
+  html_document:
+    highlight: tango
+    number_sections: yes
+    toc: yes
+    theme: yeti
+urlcolor: blue
+documentclass: article
+classoption: a4paper
+---
+
+# Repeated measures with Linear Mixed Models (LMM)
+
+We will be using the same materials that featured in the earlier tutorials, available at Github, [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template). This data contains the actual data from Annaliese Grimaud's experiment (a validation study of the expression in music) consisting of ratings of music examples representing different emotions (encoded as tracks) that were collected in two experiments. The paper titled [An Interactive Approach to Emotional Expression Through Musical Cues](https://journals.sagepub.com/doi/10.1177/20592043211061745) just came out in Music & Science. 
+
+If you still have these materials from the previous session, good. If not, get a fresh copy from github by downling whole [package](https://github.com/tuomaseerola/R_template). Make sure it runs in your _RStudio_.
+
+# Background
+
+The data is documented and preprocessed in the `contents.R` file, which we have gone through previously. We also have gone through the basic statistics (_t-test_, _correlation_, _anova_) via the examples in the book draft. However, most of the experiments in our field collect **multiple observations from the same participants**. In the terminology of experiments, most experiments are _within-subject experiments_, which requires slight adjustment to the basic analysis of t-tests or anovas since each response is not sampled from a group of people but initially from an individual who then represents the sample. This is not a problem but actually an advantage, since it is economical to collect the data where there are multiple observations from participants and one will be able to deal with the different variation of the responses that individuals tend to have.
+
+## Example
+
+Let's load the existing data first (this is from `contents.R`).
+
+```{r preload, echo=TRUE, warning=FALSE,message=FALSE}
+rm(list=ls(all=TRUE))                     # Cleans the R memory, just in case
+source('scr/load_libraries.R')            # Loads the necessary R libraries
+
+#### READ data (from Qualtrics TSV)  ---------------------------------------------------------
+source('scr/read_data_survey.R')          # Produces data matrix v with a lot of variables
+
+#### MUNGE data (preprocess, recode, etc.)  --------------------------------------------------
+source('munge/rename_variables.R')        # Renames most of the columns in the v
+source('munge/recode_instruments.R')      # Produces df from v that contains all data in long form
+```
+
+So, nothing new so far but we have the data in **long-format** (`df` has 8918 observations in 9 columns, certainly repeated data).
+```{r head}
+head(df)
+```
+
+### Let's select and visualise a subset of the data
+
+Let's select ratings of sadness to focus on one emotion in the following examples.
+
+```{r subset}
+tmp <- dplyr::filter(df,Scale=='SADNESS') # Get sadness ratings
+
+pd<-position_dodge(.85)
+fig1 <- tmp %>% 
+  group_by(Track,Source) %>%
+  summarise(mean= mean(Rating),stdev = sd(Rating),.groups="drop") %>% 
+  ggplot(aes(x = Track,y = mean,fill=Source),position=pd)+
+  geom_col(aes(x = Track,y = mean),colour='black',show.legend = TRUE,position=pd)+
+  geom_errorbar(aes(x = Track,y = mean,ymin=mean-stdev,ymax=mean+stdev),width=0.5, position=pd)+
+  scale_y_continuous(breaks = seq(1,5,by=1), expand = c(0,0))+
+  coord_cartesian(ylim = c(1, 5.5)) +
+  ylab('Mean ± SD')+
+  theme_bw()
+print(fig1)
+```
+
+We have ratings of sadnesss for 7 different target emotions (`Track`) across two experiments (`Source`). Not surprisingly, the tracks composed to represent Sadness were rated as highest in sadness, while most of the emotion tracks get fairly low ratings with some tracks obtaining mildly elevated ratings (Calmness...). There is a bit of variation between the two experiments (this is the Source factor), but this does not related sadness tracks but mainly to other tracks. But are these differences statistically significant?
+
+### Repeated measures ANOVA
+
+To check whether the ratings sadness are different for the different tracks representing emotions, you would run an analysis of variance.
+Traditionally you run analysis of variance (ANOVA) when comparing the groups and when you have repeated measures data, you had an extension to the analysis. In basic R, this is easy. We first choose one rating scale, this time sadness, and then test whether the participants gave different ratings of sadness across `Tracks` (representing different emotions) and `Source` (representing two experiments).
+
+```{r tradrepeated}
+AOV.repeated <- aov(Rating ~ Track * Source + Error(PID/(Track * Source)), data = tmp)
+print(summary(AOV.repeated))
+```
+We see main effects in Tracks and Sources and also an interaction (Track:Source is significant above). However, repeated measures ANOVA is somewhat old-fashioned and it is never better than mixed models. It does not cope with non-normality well, it cannot cope with missing data, it cannot deal with unbalanced data (different repeats for different individuals). It is also difficult to construct. So we turn into more contemporary way of doing this. 
+
+### Mixed Effects Models
+
+In general, Mixed Effects Models can be linear or non-linear. Broadly they both are under _Generalised Linear Mixed Models_ (GLLMs), but here we assume that the underlying distribution are normal and we apply linear models, so our Mixed Effects Models is actually a _Linear Mixed Model_ (abrreviated as LMM).
+
+LMM breaks down the variance into _fixed_ and _random effects_. This breakdown relates to the research question and design, not the technicalities of the variables.
+
+* _Fixed effects_ are variables that we expect to have an effect on the dependent variable
+* _Random effects_ aretypically grouping factors for which we are trying to control. They are always categorical, and there are usually more than 5 levels in them. We are not that interested in the random effects but we know that these might influence the results effects.
+
+Using `lme4` library, we will fit the random effect using the syntax `(1|variableName)` to explore how the Tracks and Sources differed when the same participants gave multiple responses. In effect our random factor is participants (PID), and we are interested in the Track and Source and their interaction. This is the simplest case of LMM.
+
+```{r mixed}
+library(lme4)
+m1 <- lmer(Rating ~ Track * Source + (1|PID), data=tmp)
+summary(m1)
+```
+
+That's a lot of comparisons. We can simplify these comparison to check the aspects of the analysis that are interested in and also, if we run a lot of comparison, we need to consider multiple corrections for running so many different tests. There is another handy R package called `emmeans` which allows to construct all sorts comparison of the factors after the mixed effects models.
+
+Let's just focus on `Tracks`, and test which tracks differ from each other in the emotion ratings (this is from `compare_means.R` in the existing scripts). We now do this across the experiments (we drop the `Source` from the analysis, although we could keep it in).
+
+```{r tracks}
+library(emmeans)  # load the library
+m_tracks <- lmer(Rating ~ Track + (1|PID), data=tmp) # Analysis of ratings across Tracks
+emm1<- emmeans(m_tracks, specs = pairwise ~ Track,adjust="bonferroni") # are emotions different between all pairings of the tracks?
+emm1
+```
+
+What is our interpretation here?
+
+Or we can focus on `Source` to check whether the ratings across tracks were different in the two experiments:
+
+```{r source}
+m_source <- lmer(Rating ~ Source + (1|PID), data=tmp)
+emm2<- emmeans(m_source, specs = pairwise ~ Source) # are emotions different between Experiments?
+emm2
+```
+
+And here the interpretation is pretty simple. 
+
+
+In both of these cases we have fitted so-called _random-intercept models_, where each participant has a different intercept. In some cases, this is not unrealistic and some samples/populations come systematically with different assumptions. For instance, some participants may come from certain ensembles/orchestra or schools, and in these cases, we can specify random-slope and random-intercept model, where we allow the intercepts to be influenced by this grouping variable. 
+
+Here we compared all pairs of emotions to each other, but one can also specify whatever contrasts one is interested in (positive emotions vs negative emotions, or sadness vs all other emotions or...).
+
+One can also plot group differences with the `emmeans` functions.
+
+```{r}
+m1 <- lmer(Rating ~ Track * Source + (1|PID), data=tmp)
+emmip(m1, ~ Track  | Source, CIs = TRUE)
+```
+
+In conclusion, `lme4` for LMMs enhanced with `emmeans` allow you to analyse almost any combination of repeated measures data that could even have non-normal distributions, missing observations, and non-symmetrical designs. It is a versatile tool but it also requires time to get familiar with. 
+
+# Further information
+
+## LMM models
+
+* [Introduction to linear mixed models](https://ourcodingclub.github.io/tutorials/mixed-models/)
+* [Linear mixed-effects models for within-participant psychology experiments](https://www.frontiersin.org/articles/10.3389/fpsyg.2015.00002/full)
+* [bw_LME_tutorial.pdf](http://jontalle.web.engr.illinois.edu/MISC/lme4/bw_LME_tutorial.pdf)
+
+## Repeated measures
+
+* [Repeated measures ANOVA in R](https://www.datanovia.com/en/lessons/repeated-measures-anova-in-r/)
