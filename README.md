@@ -4,7 +4,7 @@ This repository contains R template for analysing data from experiments and surv
 
 You can check the slides about [reproducible research](https://tuomaseerola.github.io/R_template/reproducible_research.html) or see [R_template in action](https://tuomaseerola.github.io/R_template/R_template_in_action.html) which uses a (too) complex behavioural dataset to clarify the steps of the process. 
 
-More extensive version will be available in the repository related to _Music and Science – Guide to Empirical Music Research (Book)_[https://tuomaseerola.github.io/emr/](https://tuomaseerola.github.io/emr/)
+More extensive discussion and examples will be available in the repository related to [Music and Science – Guide to Empirical Music Research (Book)](https://tuomaseerola.github.io/emr/) here: [https://tuomaseerola.github.io/emr/](https://tuomaseerola.github.io/emr/).
 
 If you do have access to computer able to run the software, you can also start the analysis in RStudio and R as an independent process in a browser by using **Binder**, [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tuomaseerola/R_template/main?urlpath=rstudio).
 
