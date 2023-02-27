@@ -4,6 +4,7 @@ This repository contains R template for analysing data from experiments and surv
 
 If you do have access to computer able to run the software, you can also start the analysis in RStudio and R as an independent process in a browser by using **Binder**, [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tuomaseerola/R_template/main?urlpath=rstudio).
 
+
 ## Organisation
 
 The folder structure is described in detail in the report, but it the main purposes of the process are clearly separated into separate folders:
