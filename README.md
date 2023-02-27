@@ -24,7 +24,7 @@ In this repository, `contents.R` will be needed to reproduce the analysis in R. 
 
 `runtime.txt` and `install.R` are auxiliary files for Binder and not actually needed in the analysis. 
 
-Proceed to [R_template in action](https://tuomaseerola.github.io/R_template/R_template_in_action.html) explore the steps of the analysis process. 
+Proceed to either a fuller explanation of the process at [https://tuomaseerola.github.io/R_template/](https://tuomaseerola.github.io/R_template/) or check the quarto slides about [R_template in action](https://tuomaseerola.github.io/R_template/R_template_in_action.html) to explore the steps of the analysis process. 
 
 ## Caveats
 
