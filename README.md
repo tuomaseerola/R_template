@@ -2,6 +2,8 @@
 
 This repository contains R template for analysing data from experiments and surveys and justification to follow certain conventions and structures. This document is available at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template) and as a rendered html at [https://tuomaseerola.github.io/R_template/](https://tuomaseerola.github.io/R_template/). 
 
+You can check the slides about [reproducible research](https://tuomaseerola.github.io/R_template/reproducible_research.html) or see [R_template in action](https://tuomaseerola.github.io/R_template/R_template_in_action.html) in a complex behavioural dataset. 
+
 If you do have access to computer able to run the software, you can also start the analysis in RStudio and R as an independent process in a browser by using **Binder**, [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tuomaseerola/R_template/main?urlpath=rstudio).
 
 
@@ -21,13 +23,12 @@ In this repository, `contents.R` will be needed to reproduce the analysis in R. 
 
 `runtime.txt` and `install.R` are auxiliary files for Binder and not actually needed in the analysis. 
 
-You can check the slides at [https://tuomaseerola.github.io/R_template/R_template_in_action.html](https://tuomaseerola.github.io/R_template/R_template_in_action.html) or
-[https://tuomaseerola.github.io/R_template/reproducible_research.html](https://tuomaseerola.github.io/R_template/reproducible_research.html) 
 
-
-## Caveat
+## Caveats
 
 This repository and the documents cannot be considered as a quick _R tutorial_ or a _statistics tutorial_ but simply a way to explain to PG students and collaborators of how clear analyses schemes can be created, followed, and shared. This has helped us to be productive, minimise errors and speak the same language, even though sharing is usually done internally (Dropbox or OneDrive) and only rarely through Github or OSF. For further tutorials, please seek more information about [reproducibility in science](https://ropensci.org/) and [RStudio online learning pages](https://education.rstudio.com).
+
+While I here advocate the use of _R_, _Python_ and _jupyter notebooks_ would be equally good choice for transparent and reproducible analysis workflows.
 
 Tuomas Eerola, Durham University, UK
 
