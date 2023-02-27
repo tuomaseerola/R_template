@@ -1,0 +1,225 @@
+---
+title: "Reproducible Research"
+subtitle: "MSL meeting"
+author: "Tuomas Eerola"
+date: 2023-02-28
+date-format: long
+format: 
+  revealjs:
+    theme: default
+    toc: true
+    toc-depth: 1 # default is 3
+    toc-title: Contents
+    smaller: false
+    slide-number: true
+    show-slide-number: all
+    logo: figures/MusicScienceDU.jpg
+    footer: "MSL"
+    embed-resources: true
+    self-contained: false
+    bibliography: reproducible.bib
+    csl: apa6.cls
+    anchor-sections: true
+    smooth-scroll: true
+---
+<!-- renderthis::to_pdf("session1.html") -->
+
+# What is Reproducible Research?
+
+## What is Reproducible Research?
+
+"A study is reproducible if there is a specific set of computational functions/analyses that exactly reproduce all of the numbers and data visualizations in a published paper from raw data. Reproducibility does not require independent data collection and instead uses the methods and data collected by the original investigator." [@marwick2016computational, p. 4]
+
+## Why Reproducible Research?
+
+::: callout-important
+Crisis on replication and transparency in empirical research
+:::
+
+![](figures/reproducibility_crisis.png)
+
+in _Nature_ [@baker2016]
+
+## 1 -- Credibility Crisis
+
+- "Why most published research findings are false" [@ioannidis2005most]
+- Psychology has lion share of bias/misleading results [@simmons2011] 
+- Science: Serious concern about robustness of results
+  - 100 studies replicated, about 36% produced statistically significant results [@open2015estimating]
+
+
+## Why Reproducible Research?
+
+"Many Labs 2" Project Results in November 2018
+
+- $\approx 50\%$ psychology findings replicated
+- Small effect sizes
+- Consistency across labs
+- Alternative explanations controlled for
+- Made transparent via [OSF](https://osf.io/8cd4r/) and [Psyarxiv](psyarxiv.com/9654g)
+
+## Why <U>Irreproducible</U> Research?
+
+- We don't know better
+- We have pressure to publish 
+- There is no incentive to produce reproducible research
+- Selective reporting drives results (cherry picking, p-hacking, only reporting positive results)
+- It keeps us artificially in the business 
+  * we are the only ones who have/can process/claim ownership on the data/method/protocol
+  * "it preserves the competitive edge"
+
+# Benefits of Reproducibility
+
+## Benefits of Reproducibility (1)
+
+- Comply with the demands for transparency
+
+  * First in computer sciences and biosciences
+  * Next in social sciences [@asendorpf2013recommendations]
+    - Note: Open Access Data is required by all RCUK funding
+  * Some journals promote transparency
+  * *Pre-registration* of study beforehand
+
+![](figures/eKhYvwH.jpg)
+
+
+
+## Benefits of Reproducibility (2)
+
+- To collaborate more easily and effectively
+
+  - Spot mistakes
+  
+  - Encourage learning and exploration 
+
+- To communicate research more clearly
+
+    - Workflows that integrate analysis and reporting
+    
+    - Gain visibility [@piwowar2007sharing]
+
+- To raise awareness of quality concerns
+  - Journal policies have improved the situation
+  - Is still neglected in practice [@hardwicke2019]
+
+## Reproducible Research
+
+Article – is just a tip of the iceberg. Reproducible Research makes the whole workflow accessible.
+
+<center>![](figures/Iceberg.jpg)</center>
+
+## Types of Reproducible Research
+
+3 kinds of reproducibility [@stodden2014implementing]:
+
+  * **Computational reproducibility**: code, software, hardware and implementation details.
+  
+  * **Empirical reproducibility**: detailed information about non-computational empirical scientific experiments and observations. Basically the data.
+  
+  * **Statistical reproducibility**: detailed information is provided about the choice of statistical tests.
+
+# Reproducible Music Research?
+
+## Reproducible Music Research?
+
+Music Research is interdisciplinary, and some disciplines are closer to demands of reproducibility than others 
+
+- _Music Information Retrieval_ (MIR) leads the way (soundsoftware.ac.uk)
+
+- _Music Psychology_ follows the path (interest in [replication](http://journals.sagepub.com/toc/msxa/17/3), but very slow take up (study about this coming up)
+
+- _Music Intervention research_ (has to register study protocols)
+
+- _Computational music analysis/theory/ethnomusicology_ utilise corpus studies 
+
+## How to Achieve Reproducible Research?
+
+Workflows that are reproducible and transparent
+
+-  1. **Design** (sometimes requiring *pre-registration*)
+-  2. **Analysis** (using tools that allow reproduction)
+-  3. **Data** (data, analysis pipelines, repositories, etc.)
+-  4. **Reporting** (linking data, analysis, outputs)
+
+## 1. Designs --  Pre-registration
+
+* The study details (research questions, methods, recruitment, stimuli, analysis details, inferences) are defined and submitted to peer review (_Registered Report_)
+  - If a passed, _In-Principle Acceptance_ (IPA)
+  - Collect the data, follow the protocol, 2nd peer review 
+
+* Coming to our field (we have pioneered several of these)
+  - _Auditory Perception & Cognition_ [@armitage2022]
+  - _Music Perception_ [IPA] [@lahdelmaeerola]
+  - _Psychonomic Bulletin & Review_ [@eerola_lahdelma2021c]
+
+## Pros and Cons of Pre-registration
+  
+### [Positives]{style="color: green;"}
+
+- [Improves quality (definitions, design, measures, analysis)]{style="color: green;"}
+- [Positive review experience]{style="color: green;"}
+  - [less at stake without data]{style="color: green;"}
+  - [collaborative mode]{style="color: green;"}
+
+### [Negatives]{style="color: red;"}
+
+- [Takes time (additional planning + review)]{style="color: red;"}
+- [Reveals study plans to others (but safely so)]{style="color: red;"}
+- [**Innovation** is considered more valuable that reliability boost]{style="color: red;"}
+  
+
+## 2. Analysis Tools and Reproducibility
+
+* **Music analysis**
+  - [Yes: Python (music21, librosa), R (incon, humdrumR)]{style="color: green;"}
+  - [No: Sonic Visualiser, sequencers]{style="color: red;"}
+
+* **Statistics**
+  - [Yes: R / Jamovi / Python]{style="color: green;"}
+  - [No: SPSS]{style="color: red;"}
+
+* **Reporting**
+  - [Yes: RMarkdown, Quarto, Jupyter notebooks]{style="color: green;"}
+  - [No: Microsoft Word]{style="color: red;"}
+
+## 3. Data Sharing and Analysis Pipeline
+
+- Repositories (Github, OSF, Dataverse, Zenodo, etc.)
+
+![](figures/github_etc_icons.png)
+
+  - [https://github.com/tuomaseerola/opendata](https://github.com/tuomaseerola/opendata)
+
+::: callout-note
+Sharing <U>can be done anonymously</U> for review (e.g. https://anonymous.4open.science, drupal.org, OSF)
+:::
+
+
+## 4. Reporting -- Reproducible Workflows
+
+![](figures/workflow.png)
+
+# Ways to Promote Reproducibility
+
+## Ways to Promote Reproducibility
+
+ -  Require reproducibility from PhD students ☑️
+ -  Run replication studies in teaching  ☑️
+ -  Make it one of your themes in lab meetings ☑️
+ -  Steer collaborations into reproducible workflows ☑️
+
+> 	“Reproducibility is like brushing your teeth. It is good for you, but it takes time and effort. Once you learn it, it becomes a habit.” [@baker2016]
+
+## The End
+
+
+
+slides available at: 
+
+[https://github.com/tuomaseerola/talks](https://github.com/tuomaseerola/talks)
+
+
+## References
+
+::: {#refs}
+:::

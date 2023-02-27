@@ -6,15 +6,15 @@ knit: (function(input_file, encoding) {
  encoding=encoding,
  output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author: "Tuomas Eerola, Durham University"
-date: "22/11/2021"
+date: "28/2/2023"
 header-includes:
    - \usepackage{svg}
 output:
   html_document:
-    highlight: tango
+    highlight: default
     number_sections: yes
     toc: yes
-    theme: yeti
+    theme: default
   pdf_document:
     highlight: tango
     keep_tex: no
@@ -25,13 +25,20 @@ fontsize: 12pt
 urlcolor: blue
 ---
 
-**Release notes**
+# Reproducible Research Tutorials
 
-These files contains R template for analysing data from experiments and surveys and justification to follow certain conventions and structure. This document is available in raw form at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template) and as a rendered html at [https://tuomaseerola.github.io/R_template/](https://tuomaseerola.github.io/R_template/). 
+## Entrypoints into Reproducible Research
 
-The analysis process can also be started as an independent process at Binder [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/tuomaseerola/R_template/main?urlpath=rstudio.
+* [Summary Slides](reproducible_research.html) (A short summary)
+
+* [R_template in action](R_template_in_action.html) (A worked out example with complex and unlabelled data.)
+
+## Notes and caveats about `R_template`
+
+This repository contains R template for analysing data from experiments and surveys and justification to follow certain conventions and structure. This document is available in raw form at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template) and as a rendered html at [https://tuomaseerola.github.io/R_template/](https://tuomaseerola.github.io/R_template/). 
 
 This repository and the documents are not a quick _R tutorial_ nor _statistics tutorial_ but simply a way to explain to PG students and collaborators of how clear analyses schemes can be created, followed, and shared.
+
 
 # Why reproducible research? 
 
@@ -84,6 +91,8 @@ A project should have a dedicated folder with a descriptive name it. Within the 
 ## Using the Template
 
 Once you have the template including the data and folder structure as well as _R_ installed (or _RStudio_), it should be straightforward to proceed to using the template. A copy of the template can be found at [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template).
+
+For a run-through of the data using the template, see [R_template in action](R_template_in_action.html).
 
 ### Example data
 
