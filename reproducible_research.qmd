@@ -40,7 +40,7 @@ Crisis on replication and transparency in empirical research
 
 in _Nature_ [@baker2016]
 
-## 1 -- Credibility Crisis
+## Credibility Crisis
 
 - "Why most published research findings are false" [@ioannidis2005most]
 - Psychology has lion share of bias/misleading results [@simmons2011] 
@@ -48,15 +48,19 @@ in _Nature_ [@baker2016]
   - 100 studies replicated, about 36% produced statistically significant results [@open2015estimating]
 
 
-## Why Reproducible Research?
+## Credibility Crisis -- Update
 
-"Many Labs 2" Project Results in November 2018
+"Many Labs 2" Project [@klein2018many]
 
 - $\approx 50\%$ psychology findings replicated
 - Small effect sizes
 - Consistency across labs
 - Alternative explanations controlled for
 - Made transparent via [OSF](https://osf.io/8cd4r/) and [Psyarxiv](psyarxiv.com/9654g)
+
+## Many Labs 2 Results
+
+![](figures/manylabs2.png)
 
 ## Why <U>Irreproducible</U> Research?
 
@@ -65,20 +69,22 @@ in _Nature_ [@baker2016]
 - There is no incentive to produce reproducible research
 - Selective reporting drives results (cherry picking, p-hacking, only reporting positive results)
 - It keeps us artificially in the business 
-  * we are the only ones who have/can process/claim ownership on the data/method/protocol
+  * we are the only ones who have/can process/data/method...
   * "it preserves the competitive edge"
 
 # Benefits of Reproducibility
 
 ## Benefits of Reproducibility (1)
 
-- Comply with the demands for transparency
+### 1. To increase trust
 
-  * First in computer sciences and biosciences
-  * Next in social sciences [@asendorpf2013recommendations]
-    - Note: Open Access Data is required by all RCUK funding
-  * Some journals promote transparency
-  * *Pre-registration* of study beforehand
+  * Needed in biosciences and social sciences
+  * *Pre-registration* of studies from medical sciences
+
+### 2. To comply with the transparency demands
+
+  * Open Access Data is required by all UKRI funding
+  * Some journals require transparency (data/analysis, etc.)
 
 ![](figures/eKhYvwH.jpg)
 
@@ -86,51 +92,50 @@ in _Nature_ [@baker2016]
 
 ## Benefits of Reproducibility (2)
 
-- To collaborate more easily and effectively
+### 3. To collaborate more easily and effectively
 
-  - Spot mistakes
-  
-  - Encourage learning and exploration 
+- Spot mistakes, encourage learning & exploration 
 
-- To communicate research more clearly
+### 4. To communicate research more clearly
 
-    - Workflows that integrate analysis and reporting
-    
-    - Gain visibility [@piwowar2007sharing]
+- Workflows that integrate analysis and reporting
+- Gain visibility [@piwowar2007sharing]
 
-- To raise awareness of quality concerns
-  - Journal policies have improved the situation
-  - Is still neglected in practice [@hardwicke2019]
+### 5. To raise awareness of quality concerns
+
+- Journal policies have improved the situation
+- Is still neglected in practice [@hardwicke2019]
 
 ## Reproducible Research
 
-Article – is just a tip of the iceberg. Reproducible Research makes the whole workflow accessible.
+Article – is just a tip of the iceberg. Reproducible Research makes the whole workflow accessible
 
 <center>![](figures/Iceberg.jpg)</center>
 
-## Types of Reproducible Research
+## Types of Reproducibility
 
-3 kinds of reproducibility [@stodden2014implementing]:
 
-  * **Computational reproducibility**: code, software, hardware and implementation details.
+  * **Computational reproducibility**: code, software, hardware and implementation details
   
-  * **Empirical reproducibility**: detailed information about non-computational empirical scientific experiments and observations. Basically the data.
+  * **Empirical reproducibility**: information about non-computational empirical scientific experiments & observations
   
-  * **Statistical reproducibility**: detailed information is provided about the choice of statistical tests.
+  * **Statistical reproducibility**: detailed information is provided about the choice of statistical tests
+
+From @stodden2014implementing. All three can be combined in fully transparent workflows
 
 # Reproducible Music Research?
 
 ## Reproducible Music Research?
 
-Music Research is interdisciplinary, and some disciplines are closer to demands of reproducibility than others 
+Attitude towards reproducibility varies across disciplines 
 
-- _Music Information Retrieval_ (MIR) leads the way (soundsoftware.ac.uk)
+- _MIR_ has led the way ([soundsoftware.ac.uk](http://soundsoftware.ac.uk))
 
-- _Music Psychology_ follows the path (interest in [replication](http://journals.sagepub.com/toc/msxa/17/3), but very slow take up (study about this coming up)
+- _Music Psychology_ follows the trajectory: Interest in [replication: special issue in 2013](http://journals.sagepub.com/toc/msxa/17/3), but slow take up
 
 - _Music Intervention research_ (has to register study protocols)
 
-- _Computational music analysis/theory/ethnomusicology_ utilise corpus studies 
+- _Computational music analysis/ethnomusicology_ utilise corpus studies
 
 ## How to Achieve Reproducible Research?
 
@@ -157,9 +162,8 @@ Workflows that are reproducible and transparent
 ### [Positives]{style="color: green;"}
 
 - [Improves quality (definitions, design, measures, analysis)]{style="color: green;"}
-- [Positive review experience]{style="color: green;"}
-  - [less at stake without data]{style="color: green;"}
-  - [collaborative mode]{style="color: green;"}
+- [Review conflicts: less at stake without data]{style="color: green;"}
+- [Review style: collaborative mode]{style="color: green;"}
 
 ### [Negatives]{style="color: red;"}
 
@@ -194,10 +198,20 @@ Workflows that are reproducible and transparent
 Sharing <U>can be done anonymously</U> for review (e.g. https://anonymous.4open.science, drupal.org, OSF)
 :::
 
+## 4. Reporting -- Reproducible Workflows (1)
 
-## 4. Reporting -- Reproducible Workflows
+### Experiment Analysis Example
+
+![](figures/workflow2.png)
+
+
+## 4. Reporting -- Reproducible Workflows (2)
+
+### Corpus Analysis Example
 
 ![](figures/workflow.png)
+
+
 
 # Ways to Promote Reproducibility
 
@@ -210,13 +224,15 @@ Sharing <U>can be done anonymously</U> for review (e.g. https://anonymous.4open.
 
 > 	“Reproducibility is like brushing your teeth. It is good for you, but it takes time and effort. Once you learn it, it becomes a habit.” [@baker2016]
 
-## The End
+## The End {.center}
 
 
 
-slides available at: 
+Slides available at: 
 
-[https://github.com/tuomaseerola/talks](https://github.com/tuomaseerola/talks)
+[https://tuomaseerola.github.io/R_template/](https://tuomaseerola.github.io/R_template/)
+
+  see [Summary slides](https://tuomaseerola.github.io/R_template/reproducible_research.html#/title-slide)
 
 
 ## References
