@@ -1,8 +1,8 @@
 ---
 title: "R_template in action"
-subtitle: "MSL meeting"
+subtitle: "Advanced Topics in Music Psychology"
 author: "Tuomas Eerola"
-date: 2023-02-28
+date: 2025-11-18
 highlight-style: arrow
 date-format: long
 execute:
@@ -17,7 +17,7 @@ format:
     slide-number: true
     show-slide-number: all
     logo: figures/MusicScienceDU.jpg
-    footer: "MSL"
+    footer: "ATMP - R data carpenty - Tuomas Eerola"
     embed-resources: true
     self-contained: false
     anchor-sections: true
@@ -34,13 +34,29 @@ library(ggplot2)
 library(tidyr)
 ```
 
+## Preliminaries (0)
+
+::: {.incremental}
+
+- Your knowledge of statistics?
+
+- Your experience with R or similar? 
+
+- Your datasets (sources, experiments, surveys, etc.)?
+
+- Why is transparent research valuable?
+
+- Do you have `RStudio` and `R_template`?
+
+:::
+
 ## Preliminaries (1)
 
 This process assumes that you have 
 
 - _RStudio_ installed in your computer (it's free)
 
-- Basic understanding of _RStudio_ workspace, path, and environment (Chapter 6.5 in _Scientific Musicology_) 
+- Basic understanding of _RStudio_ workspace, path, and environment (Chapter 6 in _Music and Science_) 
 
 - the materials downloaded from [https://github.com/tuomaseerola/R_template](https://github.com/tuomaseerola/R_template) 
 
@@ -50,11 +66,27 @@ This process assumes that you have
 
 ## Preliminaries (2)
 
+* Reminder of the transparency principles
+
+  * We use a workflow where each stage is **replicable**
+
+  * We **avoid** editing original data manually
+  
+  * We **document** our operations 
+  
+  * We favour **common** approaches (i.e. libraries, methods)
+  
+  * We are willing to **share** (PG, supervisor, collaborator, ...)
+
+
+## Preliminaries (3)
+
 **White slides** refer to the `contents.R` 
 
 **Light blue slides** refer to questions to you
 
 These slides are available at: [https://tuomaseerola.github.io/R_template/report_presentation.html](https://tuomaseerola.github.io/R_template/report_presentation.html)
+
 
 # Example Data {background-color="gray"}
 
@@ -76,13 +108,12 @@ source('scr/load_libraries.R')    # Loads the necessary R libraries
 
 * Why R utilises separate **packages** (libraries in your system)?
 
-* There are 18,419 of these in [CRAN](https://cran.r-project.org)
+* There are 23,036 of these in [CRAN](https://cran.r-project.org)
 
 * Popular ones are
   * `ggplot2`, A grammar of graphics in R
   * `dplyr`, a grammar of data manipulation
   * `tidyr`, a collection of package development tools
-  * `foreign`, read data stored by Minitab, S, SAS, SPSS
 
 ## Question: What are packages? (2)
 
@@ -114,7 +145,7 @@ All these operations are sometimes called _data carpentry_.
 source('scr/read_data_survey.R')      # Produces data frame v 
 head(v,3)
 ```
-
+rea
 ## Question: What is the script doing?
 
 This is the only line that matters with `read_data_survey.R`:
@@ -133,7 +164,7 @@ v <- read.csv('data/Emotion_Identification_N119_noheader.tsv', header=TRUE, sep 
 
 If you have the data in an Excel file, you can either 
 * convert these into CSV or TSV or 
-* utilise `readxl` library and then run:
+* utilise `readxl` library (this comes with `tidyverse` and then run:
 
 ```{r}
 #| eval: false
@@ -367,9 +398,23 @@ boxplot(Age ~ Gender, data=df,col='pink')
   * reading excel or CSV data into R
   * the data was labelled **badly** in _Qualtrics_, and contained **incomplete data**, which we fixed
   * we converted from *wide-format* to *long-format*
-  * we have an explicit **coding of factors** and clear **variable names**
-  * All of these operations are saved in scripts, and can be **replicated*; any analysis starts from running these preprocessing scripts on raw data
-  * We <U>never</U> manually touch raw data
+  * explicit **coding of factors** and clear **variable names**
+  * All of these operations are saved in scripts, and can be **replicated*
+
+## Alternative strategies
+
+* This analysis relied on raw R scripts
+
+* You can utilise `Rmarkdown` to combine text and R code
+
+  * outputs either html, pdf, or Word document
+  * great tool for reports and even for full papers
+  * see example "report_customised.Rmd" in "R_template"
+
+* You can also use `quarto`, new language from Posix:
+  * More output formats (these slides!)
+  * Use both Python and R and more advanced properties 
+  * see "R_template_in_action.qmd" (this document)
 
 ## Next
 

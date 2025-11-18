@@ -41,7 +41,7 @@ pd <- position_dodge(.6) # move them .05 to the left and right
 
 g3<-ggplot(S1,aes(x=Track,y=m,shape=Source,group=Source,fill=Source))+
   geom_col(position = pd,size=1,width = .5)+
-  geom_errorbar(S1, mapping=aes(x=Track, ymin=LCI, ymax=UCI), width=0.1, size=plsize,position = pd,show.legend = FALSE,alpha=0.5)+
+  geom_errorbar(S1, mapping=aes(x=Track, ymin=LCI, ymax=UCI), width=0.1, linewidth=plsize,position = pd,show.legend = FALSE,alpha=0.5)+
   facet_wrap(.~Scale,ncol = 1)+
   scale_fill_brewer(name='Experiment',palette = 'Set1')+
   scale_y_continuous(limits = c(0,5.0),breaks = seq(1,5),expand = c(0,0))+
@@ -53,10 +53,10 @@ print(g3)
 
 #### 4. Difference between musicians and nonmusicians?  ----------------------------------
 
-g4<-ggplot(df,aes(x=MusicalExpertiseBinary,y=Rating,fill=MusicalExpertiseBinary))+
-  geom_boxplot()+
-  scale_fill_brewer(name='Experiment',palette = 'Set1')+
-  facet_wrap(.~Scale,ncol = 2)+
+g4<-ggplot(df,aes(x=Gender,y=Rating,fill=Gender))+
+  geom_col(alpha=0.5)+
+  scale_fill_brewer(name='Gender',palette = 'Set1')+
+  facet_wrap(.~Scale,ncol = 3)+
   theme_bw()+
   xlab('')
 print(g4)
